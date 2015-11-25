@@ -10,7 +10,17 @@ import java.awt.*;
  *
  * @author Szwedzik
  */
-public class Main {
+public class Main extends JFrame{
+
+    SilnikGry silnik;
+
+    private int port;
+
+    PlanszaGrafika plansza_g;
+
+    private JScrollPane jScrollPane1 = null;
+
+    private JScrollPane jScrollPane2 = null;
 
     private JRadioButton klient = null;
 
@@ -40,27 +50,56 @@ public class Main {
 
     private JButton losuj = null;
 
+    Main(String _napis){
+        super(_napis);
 
-    public static void main(String[] args) {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Grafka g = new Grafka("nazwa");
-        g.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        initialize();
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        g.getContentPane().setLayout(new BorderLayout());
-        g.getContentPane().add(mainPanel,BorderLayout.CENTER);
-        g.setLocationRelativeTo(null);
-        g.pack();
-        g.setSize(700,500);
-        g.setResizable(false);
-        g.setVisible(true);
+        Container kontener1 = new Container();
+        kontener1.setLayout(new BoxLayout(kontener1,BoxLayout.PAGE_AXIS));
+        kontener1.add(getJScrollPane1(), null);
+        kontener1.add(getJScrollPane2(), null);
+        kontener1.add(getKlientRadioButton());
+        kontener1.add(getStart());
+        kontener1.add(getPolacz());
+        kontener1.add(getAdres());
+        kontener1.add(getSerwer());
+        kontener1.add(getNowaGra());
+        kontener1.add(getCzatWyslij());
+
+
+
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(mainPanel,BorderLayout.CENTER);
+        getContentPane().add(kontener1,BorderLayout.EAST);
+        setLocationRelativeTo(null);
+        setSize(700,500);
+        //g.pack();
+        setResizable(true);
         SilnikGry silnik = new SilnikGry();
         silnik.ustawSerwer();
-        g.paintPlansza(mainPanel,silnik);
+        paintPlansza(mainPanel,silnik);
 
-        g.revalidate();
+        port = 4545;
+        adres.setText("localhost");
+
+        setVisible(true);
+        revalidate();
+    }
+
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Main g = new Main("nazwa");
+                //Main g2 = new Main("nazwa");
+            }
+        });
     }
 
     private void initialize() {
@@ -332,5 +371,271 @@ public class Main {
         serwer.setEnabled(true);
         klient.setEnabled(true);
         adres.setEnabled(true);
+    }
+
+    public void paintPlansza(JPanel myPanel, SilnikGry silnik){
+        this.silnik = silnik;
+
+        plansza_g = new PlanszaGrafika(silnik.getPlansza(),8*50);
+        plansza_g.addMouseListener(plansza_g);
+        plansza_g.addMouseMotionListener(plansza_g);
+
+        myPanel.add(plansza_g, BorderLayout.CENTER);
+    }
+
+    private JRadioButton getKlientRadioButton(){
+        if (klient == null) {
+            klient = new JRadioButton();
+            klient.setText("klient");
+            klient.setSize(new Dimension(71, 21));
+            klient.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    start.setVisible(false);
+                    polacz.setVisible(true);
+                    adres.setVisible(true);
+                }
+            });
+        }
+        return klient;
+    }
+
+    private JTextField getCzatWyslij() {
+        if (czatWyslij == null) {
+            czatWyslij = new JTextField();
+            czatWyslij.setEnabled(false);
+            czatWyslij.setSize(new Dimension(300, 20));
+            czatWyslij.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    if (!czatWyslij.getText().trim().isEmpty()) {
+                        GameEvent ge = new GameEvent(GameEvent.C_CHAT_MSG);
+                        ge.setMessage(czatWyslij.getText().trim());
+                        sendMessage(ge);
+                        czatWyslij.setText("");
+                    }
+                }
+            });
+        }
+        return czatWyslij;
+    }
+
+    private JButton getNowaGra() {
+        if (nowaGra == null) {
+            nowaGra = new JButton();
+            nowaGra.setEnabled(false);
+            nowaGra.setText("Rozpocznij gr\u0119");
+            nowaGra.setSize(new Dimension(131, 23));
+            nowaGra.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    if (losuj.isEnabled()) {
+                        nowaGra.setEnabled(false);
+                        losuj.setEnabled(false);
+                        GameEvent ge = new GameEvent(GameEvent.C_JOIN_GAME);
+                        sendMessage(ge);
+                    } else {
+                        losuj.setEnabled(true);
+                        nowaGra.setText("Rozpocznij grę");
+                        zmienStatus(
+                                "Ustaw swoje statki a następnie naciśnij przycisk \"Rozpocznij grę\"",
+                                RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
+                    }
+                }
+            });
+        }
+        return nowaGra;
+    }
+
+    private JRadioButton getSerwer() {
+        if (serwer == null) {
+            serwer = new JRadioButton();
+            serwer.setSelected(true);
+            serwer.setText("serwer");
+            serwer.setSize(new Dimension(72, 21));
+            serwer.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    start.setVisible(true);
+                    polacz.setVisible(false);
+                    adres.setVisible(false);
+                }
+            });
+        }
+        return serwer;
+    }
+
+    private JTextField getAdres() {
+        if (adres == null) {
+            adres = new JTextField();
+            adres.setSize(new Dimension(132, 20));
+            adres.setText("localhost");
+            adres.setVisible(true);
+        }
+        return adres;
+    }
+
+    private JButton getPolacz() {
+        if (polacz == null) {
+            polacz = new JButton();
+            polacz.setBounds(new Rectangle(230, 471, 87, 23));
+            polacz.setText("Po\u0142\u0105cz");
+            polacz.setVisible(true);
+            polacz.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    polacz.setEnabled(false);
+                    adres.setEnabled(false);
+                    if (client == null || !client.isAlive()) {
+                        serwer.setEnabled(false);
+                        klient.setEnabled(false);
+
+                        String host = adres.getText().trim();
+                        //int port = 4545;
+
+                        client = new Client(getID(), host, port);
+
+                        if (client.start()) {
+                            GameEvent ge = new GameEvent(GameEvent.C_LOGIN);
+                            sendMessage(ge);
+
+                            zmienStatus(
+                                    "Pomyślnie połączono się z serwerem!\nUstaw swoje statki a następnie naciśnij przycisk \"Rozpocznij grę\"",
+                                    RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
+
+                            czatWyslij.setEnabled(true);
+                            polacz.setText("Rozłącz");
+                            clientStarted = true;
+                        } else {
+                            clientStarted = false;
+                            serwer.setEnabled(true);
+                            klient.setEnabled(true);
+                            adres.setEnabled(true);
+
+                            zmienStatus("Nie udało sie połączyć z serwerem!\n",
+                                    RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
+                        }
+                    } else {
+                        zmienStatus("Połączenie przerwane!\n",
+                                RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
+
+                        if (client != null) {
+                            client.stop();
+                            clientStarted = false;
+                        }
+                        client = null;
+                        ustawOdNowa();
+                    }
+                    polacz.setEnabled(true);
+                }
+            });
+        }
+        return polacz;
+    }
+
+    private JButton getStart() {
+        if (start == null) {
+            start = new JButton();
+            start.setBounds(new Rectangle(94, 468, 75, 26));
+            start.setText("start");
+            start.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    start.setEnabled(false);
+                    if (server == null || !server.isRunning()) { // tu może być błąd chyba
+                        serwer.setEnabled(false);
+                        klient.setEnabled(false);
+
+                        String host = "localhost";
+                        //int port = 4545;
+
+                        server = new Server(port);
+                        if (server.start()) {
+                            client = new Client(getID(), host, port);
+
+                            if (client.start()) {
+                                GameEvent ge = new GameEvent(GameEvent.C_LOGIN);
+                                sendMessage(ge);
+                            }
+
+                            zmienStatus(
+                                    "Serwer pomyślnie uruchomiony!\nOczekiwanie na drugiego gracza...\n",
+                                    RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
+                            czatWyslij.setEnabled(true);
+                            start.setText("Stop");
+
+                        } else {
+                            serwer.setEnabled(true);
+                            klient.setEnabled(true);
+
+                            zmienStatus("Nie udało sie uruchonić serwera!\n",
+                                    RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
+                        }
+                    } else {
+                        zmienStatus("Serwer zatrzymany!\n",
+                                RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
+
+                        if (server != null)
+                            server.stop();
+                        server = null;
+                        ustawOdNowa();
+                    }
+                    start.setEnabled(true);
+                }
+            });
+        }
+        return start;
+    }
+
+    public boolean sendMessage(GameEvent ge) {
+        if (client != null && client.isAlive()) {
+            ge.setPlayerId(getID());
+            client.sendMessage(ge);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private JScrollPane getJScrollPane1() {
+        if (jScrollPane1 == null) {
+            jScrollPane1 = new JScrollPane();
+            jScrollPane1.setLocation(new Point(356, 412));
+            jScrollPane1.setViewportView(getCzatOdbierz());
+            jScrollPane1.setSize(new Dimension(300, 83));
+        }
+        return jScrollPane1;
+    }
+
+    private JScrollPane getJScrollPane2() {
+        if (jScrollPane2 == null) {
+            jScrollPane2 = new JScrollPane();
+            jScrollPane2.setLocation(new Point(20, 386));
+            jScrollPane2.setEnabled(true);
+            jScrollPane2.setViewportView(getStatus());
+            jScrollPane2.setSize(new Dimension(300, 200));
+        }
+        return jScrollPane2;
+    }
+
+    private JTextArea getStatus() {
+        if (status == null) {
+            status = new JTextArea();
+            status.setEnabled(true);
+            status.setEditable(false);
+            status.setLineWrap(true);
+            status.setWrapStyleWord(true);
+            status.setFont(new Font("Dialog", Font.BOLD, 12));
+            zmienStatus(
+                    "Witaj w grze Statki\nAby rozpocząć grę wybierz odpowiednią opcję: serwer lub klient, uzupełnij wymagane dane, a następnie naciśnij przycisk Start lub Połącz.",
+                    RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
+
+        }
+        return status;
+    }
+
+    private JTextArea getCzatOdbierz() {
+        if (czatOdbierz == null) {
+            czatOdbierz = new JTextArea();
+            czatOdbierz.setEnabled(true);
+            czatOdbierz.setLineWrap(true);
+            czatOdbierz.setWrapStyleWord(true);
+            czatOdbierz.setEditable(false);
+        }
+        return czatOdbierz;
     }
 }
