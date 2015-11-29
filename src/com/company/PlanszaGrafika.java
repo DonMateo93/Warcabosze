@@ -20,6 +20,7 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
     private int rect_size;
     private Point2D.Double active_point;
     private ArrayList mozliwe_ruchy;
+    private Main glowny;
 
     PlanszaGrafika(Plansza plansza, int rect_height_and_width){
         this.plansza = plansza;
@@ -102,7 +103,7 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
                             System.out.println("gracz1");
                             plansza.polaPlanszy[i][j].setClicked(true);
                             active_point.setLocation(i,j);
-                            mozliwe_ruchy = plansza.mozliweRuchy(i,j);
+                            mozliwe_ruchy = plansza.mozliweRuchy(i,j,(plansza.polaPlanszy[i][j]).getPionek());
 
                             for(int k = 0; k < mozliwe_ruchy.size(); k++){
                                 WspolrzedneRuchowe wspolrzedna = (WspolrzedneRuchowe)mozliwe_ruchy.get(k);
@@ -114,7 +115,7 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
                             System.out.println("gracz2");
                             plansza.polaPlanszy[i][j].setClicked(true);
                             active_point.setLocation(i,j);
-                            mozliwe_ruchy = plansza.mozliweRuchy(i,j);
+                            mozliwe_ruchy = plansza.mozliweRuchy(i,j,(plansza.polaPlanszy[i][j]).getPionek());
 
                             for(int k = 0; k < mozliwe_ruchy.size(); k++){
                                 WspolrzedneRuchowe wspolrzedna = (WspolrzedneRuchowe)mozliwe_ruchy.get(k);

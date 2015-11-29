@@ -11,20 +11,32 @@ import java.awt.geom.Rectangle2D;
 
 
 enum Wlasciciel {wgracz1, wgracz2, wnikt}
+
+enum Pionek {pionekZwykly, pionekDamka}
 /**
  *
  * @author Szwedzik
  */
 public class Pole extends Rectangle2D.Double{
     private double X = 0;
+
     private double Y = 0;
+
     private double H = 0;
+
     private double W = 0;
+
     private boolean isClicked;
+
     private boolean isPossibleMove;
+
     private boolean jestPionek;
+
     private Wlasciciel wlasciciel;
+
     private Color color;
+
+    Pionek pionek;
 
     Pole(double X, double Y, double W, double H, Color color){
 
@@ -47,7 +59,13 @@ public class Pole extends Rectangle2D.Double{
      */
     public void ustawWlasciciela(Wlasciciel _wlasciciel){
         wlasciciel = _wlasciciel;
+        if(wlasciciel == wlasciciel.wnikt){
+            jestPionek = false;
+        }else{
+            jestPionek = true;
+        }
     }
+
     public Wlasciciel zwrocWlasciciela(){
         return wlasciciel;
     }
@@ -62,6 +80,7 @@ public class Pole extends Rectangle2D.Double{
 
     public void usunPionek(){
         jestPionek = false;
+        wlasciciel = Wlasciciel.wnikt;
     }
 
     public boolean getIsClicked(){
@@ -84,28 +103,20 @@ public class Pole extends Rectangle2D.Double{
         x = _x;
         y = _y;
     }
+
+    public Pionek getPionek(){
+        return pionek;
+    }
+
+    public void setPionekAndWl(Wlasciciel wlasciciel, Pionek pionek){
+        this.wlasciciel = wlasciciel;
+        if(this.wlasciciel == Wlasciciel.wnikt){
+            jestPionek = false;
+        }else{
+            jestPionek = true;
+        }
+
+        this.pionek = pionek;
+    }
 }
 
-//            if(czyjRuch == CzyjRuch.rgracz1){
-//                if(klikniecie == Klikniecie.drugie){
-//                    klikniecie = Klikniecie.zerowe;
-//                    //wykonaj ruch
-//                }
-//
-//                if(klikniecie == Klikniecie.pierwsze){
-//                    Point p = new Point();
-//                    p = e.getPoint();
-//                    if(wlascicielPola(p.x,p.y) == Wlasciciel.wgracz1){
-//
-//                    }
-//                }
-//                if(klikniecie == Klikniecie.zerowe){ //trzeba dodac przeskalowanie z gui czyli 8*x bo osiem pol i x pikseli na pole
-//                    Point p = new Point();
-//                    p = e.getPoint();
-//                    if(wlascicielPola(p.x,p.y) == Wlasciciel.wgracz1){
-//                        klikniecie = Klikniecie.pierwsze;
-//                        xPrzenoszonegoPionka = p.x;
-//                        yPrzenoszonegoPionka = p.y;
-//                    }
-//                }
-//            }

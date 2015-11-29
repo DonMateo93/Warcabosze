@@ -92,6 +92,8 @@ public class GameEvent {
 	/**  */
 	public static final int SB_GAME_OVER = 1311;
 
+	/** Serwer rozszyła wynik strzału */
+	public static final int MOVE_CHECKER = 2000;
 	// -----------------------------------------------------
 
 	/** Typ zdarzenia */

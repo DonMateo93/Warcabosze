@@ -17,12 +17,21 @@ import static com.company.CzyjRuch.rgracz1;
  * @author Szwedzik
  */
 public class SilnikGry{
+
+
+
     Gracz gracz;
+
     private Plansza plansza;
+
     Serwer serwer;
+
     Klient klient;
+
     Timer czasDoZbicia;
+
     int szerokoscPola;
+
     int wysokoscPola;
 
     SilnikGry(){
@@ -30,10 +39,6 @@ public class SilnikGry{
         szerokoscPola = 50; // funkcji plansza.sprawdzDzialanieUzytkownika() gdzie w parametry funkcji wchodzi juz przeskalowana wartosc
         plansza = new Plansza(wysokoscPola*8);
         plansza.ustawRuch(CzyjRuch.rgracz1);
-
-        plansza.polaPlanszy[2][5].ustawWlasciciela(Wlasciciel.wgracz2);
-        plansza.polaPlanszy[4][5].ustawWlasciciela(Wlasciciel.wgracz2);
-        plansza.polaPlanszy[5][6].ustawWlasciciela(Wlasciciel.wnikt);
     }
 
     public void ustawSerwer(){
@@ -53,11 +58,24 @@ public class SilnikGry{
     public void przekazDzialanieUzytkownika(MouseEvent e){
         double x  = e.getX()/szerokoscPola; // czyli zaokraglenie w dol
         double y = e.getY()/wysokoscPola;
-        int xfloor = (int) Math.floor(x);
-        int yfloor = (int) Math.floor(y);
-        if( plansza.sprawdzDzialanieUzytkownika(xfloor, yfloor) == true){
 
+        int xfloor = (int) Math.floor(x);
+        int yfloor = (int) Math.floor(y-1);
+        System.out.println(xfloor);
+        System.out.println(yfloor);
+        if( plansza.sprawdzDzialanieUzytkownika(xfloor, yfloor) == true){
+            czasDoZbicia = new Timer();
+            czasDoZbicia.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    zatrzymajCzas();
+                }
+            },3000,3000);
         }
+        plansza.czyjRuch = CzyjRuch.rgracz1;
+        plansza.silnik = Silnik.serwer;
+        this.plansza.przebiegGry =true;
     }
 
     public void zatrzymajCzas(){
@@ -69,10 +87,12 @@ public class SilnikGry{
             System.out.println("czas sie skonczyl");
         }
         else{
-            serwer.wyslijDane(plansza);
+            //serwer.wyslijDane(plansza);
         }
+    }
 
-
+    public void setGracz(Gracz gracz) {
+        this.gracz = gracz;
     }
 
     public Plansza getPlansza() {

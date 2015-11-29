@@ -12,7 +12,9 @@ import javax.swing.JPanel;
  * @author Szwedzik
  */
 public class Panel extends JPanel{
+
     Plansza plansza;
+
     Panel(Plansza _plansza){
         plansza = _plansza;
         repaint();
@@ -45,4 +47,5 @@ public class Panel extends JPanel{
             }
         }
     }
+
 }
