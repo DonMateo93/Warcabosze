@@ -20,6 +20,10 @@ public class Main extends JFrame{
 
     SilnikGry silnik;
 
+    public SilnikGry getSilnik() {
+        return silnik;
+    }
+
     private int port;
 
     PlanszaGrafika plansza_g;
@@ -151,7 +155,7 @@ public class Main extends JFrame{
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Main g = new Main("nazwa");
-                //Main g2 = new Main("nazwa");
+                //Main g2 = new Main("nazwa2");
             }
         });
     }
@@ -225,6 +229,7 @@ public class Main extends JFrame{
                             int y = Integer.parseInt(b1);
 
                             plansza.usunPionekAt(x,y);
+                            plansza_g.repaint();
 
                         } else if(a.compareTo("right_to_move") == 0) {
                             String a1 = s1.substring(ind + 1);

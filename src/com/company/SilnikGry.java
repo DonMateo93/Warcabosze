@@ -18,7 +18,11 @@ import static com.company.CzyjRuch.rgracz1;
  */
 public class SilnikGry{
 
+    private static SilnikGry instance = null;
 
+    public static SilnikGry getInstance() {
+        return instance;
+    }
 
     Gracz gracz;
 
@@ -39,6 +43,7 @@ public class SilnikGry{
         szerokoscPola = 50; // funkcji plansza.sprawdzDzialanieUzytkownika() gdzie w parametry funkcji wchodzi juz przeskalowana wartosc
         plansza = new Plansza(wysokoscPola*8);
         plansza.ustawRuch(CzyjRuch.rgracz1);
+        this.plansza.przebiegGry =true;
     }
 
     public void ustawSerwer(){
@@ -55,15 +60,13 @@ public class SilnikGry{
         plansza.ustawRuch(rgracz1);
     }
 
-    public void przekazDzialanieUzytkownika(MouseEvent e){
-        double x  = e.getX()/szerokoscPola; // czyli zaokraglenie w dol
-        double y = e.getY()/wysokoscPola;
+    public void przekazDzialanieUzytkownika(int xfloor, int yfloor){
 
-        int xfloor = (int) Math.floor(x);
-        int yfloor = (int) Math.floor(y-1);
-        System.out.println(xfloor);
-        System.out.println(yfloor);
         if( plansza.sprawdzDzialanieUzytkownika(xfloor, yfloor) == true){
+            if(czasDoZbicia != null){
+                czasDoZbicia.cancel();
+            }
+            System.out.println("czas minal");
             czasDoZbicia = new Timer();
             czasDoZbicia.schedule(new TimerTask() {
 
@@ -73,22 +76,14 @@ public class SilnikGry{
                 }
             },3000,3000);
         }
-        plansza.czyjRuch = CzyjRuch.rgracz1;
-        plansza.silnik = Silnik.serwer;
-        this.plansza.przebiegGry =true;
+        plansza.wprowadzDamki();
     }
 
     public void zatrzymajCzas(){
         czasDoZbicia.cancel();
-        plansza.zatrzymajProcesBic();
-        if(plansza.silnik == Silnik.klient){
+        System.out.println("czas minal");
 
-            klient.wyslijDane(plansza);
-            System.out.println("czas sie skonczyl");
-        }
-        else{
-            //serwer.wyslijDane(plansza);
-        }
+        plansza.zatrzymajProcesBic();
     }
 
     public void setGracz(Gracz gracz) {

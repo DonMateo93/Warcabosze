@@ -73,6 +73,13 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
 
                     g.drawOval((int)plansza.polaPlanszy[i][j].getX() + help, (int)plansza.polaPlanszy[i][j].getY() + help, (int)plansza.polaPlanszy[i][j].getHeight() - 2 * help, (int)plansza.polaPlanszy[i][j].getWidth() - 2 * help);
                     g.fillOval((int)plansza.polaPlanszy[i][j].getX() + help, (int)plansza.polaPlanszy[i][j].getY() + help, (int)plansza.polaPlanszy[i][j].getHeight() - 2 * help, (int)plansza.polaPlanszy[i][j].getWidth() - 2 * help);
+
+                    if(plansza.polaPlanszy[i][j].getPionek() == Pionek.pionekDamka){
+                        g.setColor(Color.black);
+                        g.drawOval((int)plansza.polaPlanszy[i][j].getX() + 3*help,(int)plansza.polaPlanszy[i][j].getY() + 3 * help, (int)plansza.polaPlanszy[i][j].getHeight() - 6 * help, (int)plansza.polaPlanszy[i][j].getWidth() - 6 * help);
+                        g.fillOval((int)plansza.polaPlanszy[i][j].getX() + 3*help,(int)plansza.polaPlanszy[i][j].getY() + 3 * help, (int)plansza.polaPlanszy[i][j].getHeight() - 6 * help, (int)plansza.polaPlanszy[i][j].getWidth() - 6 * help);
+
+                    }
                 }
             }
         }
@@ -80,17 +87,7 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("tworze czas");
-        czasDoZbicia = new java.util.Timer();
 
-        czasDoZbicia.schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                System.out.println("doliczylem");
-                czasDoZbicia.cancel();
-            }
-        }, 3000, 3000);
         for(int i = 0; i < 8; i++)
             for(int j = 0; j < 8; j++) {
                 if ((plansza.polaPlanszy[i][j]).contains(e.getPoint())) {
@@ -110,7 +107,8 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
                                 plansza.polaPlanszy[wspolrzedna.x][wspolrzedna.y].setIsPossibleMove(true);
                             }
 
-                            plansza.sprawdzDzialanieUzytkownika(i,j);
+                            Main.getInstance().getSilnik().przekazDzialanieUzytkownika(i,j);
+                            //plansza.sprawdzDzialanieUzytkownika(i,j);
                         } else if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2){
                             System.out.println("gracz2");
                             plansza.polaPlanszy[i][j].setClicked(true);
@@ -122,9 +120,11 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
                                 plansza.polaPlanszy[wspolrzedna.x][wspolrzedna.y].setIsPossibleMove(true);
                             }
 
-                            plansza.sprawdzDzialanieUzytkownika(i,j);
+                            Main.getInstance().getSilnik().przekazDzialanieUzytkownika(i,j);
+                            //plansza.sprawdzDzialanieUzytkownika(i,j);
                         } else {
-                            plansza.sprawdzDzialanieUzytkownika(i,j);
+                            Main.getInstance().getSilnik().przekazDzialanieUzytkownika(i,j);
+                            //plansza.sprawdzDzialanieUzytkownika(i,j);
                             active_point.setLocation(-1,-1);
                             mozliwe_ruchy.clear();
                         }

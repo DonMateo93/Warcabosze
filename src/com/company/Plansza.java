@@ -121,6 +121,11 @@ public class Plansza {
                     }
             }
         }
+        for(int i=0; i < 8; i++){
+            for(int j=0; j < 8; j++){
+                polaPlanszy[i][j].pionek = Pionek.pionekZwykly;
+            }
+        }
     }
 
     public ArrayList mozliweRuchy(int _x, int _y, Pionek pionek) {
@@ -176,7 +181,31 @@ public class Plansza {
                             }
                         }
                     }
+                }//dodanie bicia do tylu
+                if (((_y + 2) >= 0) && ((_y + 2) <= 7)) {
+                    if (((_x - 2) >= 0) && ((_x - 2) <= 7)) {
+                        if (polaPlanszy[_x - 1][_y + 1].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                            if (polaPlanszy[_x - 2][_y + 2].zwrocWlasciciela() == Wlasciciel.wnikt) {
+                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - 2, _y + 2, true);
+                                w.xBicia = _x - 1;
+                                w.yBicia = _y + 1;
+                                mozliweRuchy.add(w);
+                            }
+                        }
+
+                    }
+                    if (((_x + 2) >= 0) && ((_x + 2) <= 7)) {
+                        if (polaPlanszy[_x + 1][_y + 1].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                            if (polaPlanszy[_x + 2][_y + 2].zwrocWlasciciela() == Wlasciciel.wnikt) {
+                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + 2, _y + 2, true);
+                                w.xBicia = _x + 1;
+                                w.yBicia = _y + 1;
+                                mozliweRuchy.add(w);
+                            }
+                        }
+                    }
                 }
+
             }
 
             if (czyjRuch == CzyjRuch.rgracz2) {//dla gracza1 tylko do przodu
@@ -229,159 +258,219 @@ public class Plansza {
                         }
                     }
                 }
-            }
-        }
-        else {
-            boolean LG, PG, LD, PD;
-            LG = PG = LD = PD = false;
-            if (czyjRuch == CzyjRuch.rgracz2) {
-                for (int i = 1; i < 8; i++) {
-                    if (PD == false) {
-                        if ((_x + i) < 8 && (_y + i) < 8) { // sprawdzam prawo dol
-                            if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wnikt) {
-                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i, _y + i, false);
+                if (((_y - 2) >= 0) && ((_y - 2) <= 7)) {
+                    if (((_x - 2) >= 0) && ((_x - 2) <= 7)) {
+                        if (polaPlanszy[_x - 1][_y - 1].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                            if (polaPlanszy[_x - 2][_y - 2].zwrocWlasciciela() == Wlasciciel.wnikt) {
+                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - 2, _y - 2, true);
+                                w.xBicia = _x - 1;
+                                w.yBicia = _y - 1;
                                 mozliweRuchy.add(w);
+                            }
+                        }
 
-                            } else if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                                if (_x + i + 1 < 8 && _y + i + 1 < 8) {
-                                    WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y + i + 1, true);
-                                    PD = true;
-                                    w.xBicia = _x+i;
-                                    w.yBicia = _y+i;
-                                    mozliweRuchy.add(w);
-                                }
-                            } else {
-                                PD = true;
-                            }
-                        }
                     }
-                    if (PG == false) {
-                        if ((_x + i) < 8 && (_y - i) < 8) { // sprawdzam prawo gora
-                            if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wnikt) {
-                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i, _y - i, false);
+                    if (((_x + 2) >= 0) && ((_x + 2) <= 7)) {
+                        if (polaPlanszy[_x + 1][_y - 1].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                            if (polaPlanszy[_x + 2][_y - 2].zwrocWlasciciela() == Wlasciciel.wnikt) {
+                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + 2, _y - 2, true);
+                                w.xBicia = _x + 1;
+                                w.yBicia = _y - 1;
                                 mozliweRuchy.add(w);
-                            } else if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                                if (_x + i + 1 < 8 && _y - i - 1 < 8) {
-                                    WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y - i - 1, true);
-                                    PG = true;
-                                    w.xBicia = _x+i;
-                                    w.yBicia = _y-i;
-                                    mozliweRuchy.add(w);
-                                }
-                            } else {
-                                PG = true;
-                            }
-                        }
-                    }
-                    if (LG == false) {
-                        if ((_x - i) < 8 && (_y - i) < 8) { // sprawdzam prawo dol
-                            if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wnikt) {
-                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i, _y - i, false);
-                                mozliweRuchy.add(w);
-                            } else if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                                if (_x - i - 1 < 8 && _y - i - 1 < 8) {
-                                    WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y - i - 1, true);
-                                    LG = true;
-                                    w.xBicia = _x-i;
-                                    w.yBicia = _y-i;
-                                    mozliweRuchy.add(w);
-                                }
-                            } else {
-                                LG = true;
-                            }
-                        }
-                    }
-                    if (LD == false) {
-                        if ((_x - i) < 8 && (_y + i) < 8) { // sprawdzam prawo dol
-                            if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wnikt) {
-                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i, _y + i, false);
-                                mozliweRuchy.add(w);
-                            } else if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                                if (_x - i - 1 < 8 && _y + i + 1 < 8) {
-                                    WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y + i + 1, true);
-                                    LD = true;
-                                    w.xBicia = _x-i;
-                                    w.yBicia = _y+i;
-                                    mozliweRuchy.add(w);
-                                }
-                            } else {
-                                LD = true;
                             }
                         }
                     }
                 }
             }
-            if (czyjRuch == CzyjRuch.rgracz1) {
-                for (int i = 1; i < 7; i++) {
-                    if (PD == false) {
+        } else {
+            boolean wLG, wPG, wLD, wPD;
+            wLG = wPD = wLD = wPG = false;
+            if (czyjRuch == CzyjRuch.rgracz2) {
+                for (int i = 1; i < 8; i++) {
+                    if(wPD == false){
                         if ((_x + i) < 8 && (_y + i) < 8) { // sprawdzam prawo dol
                             if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wnikt) {
                                 WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i, _y + i, false);
                                 mozliweRuchy.add(w);
-                            } else if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                                if (_x + i + 1 < 8 && _y + i + 1 < 8) {
+                            }
+                            if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                                if (_x + i + 1 < 8 && _y + i + 1 < 8 && polaPlanszy[_x + i + 1][_y + i + 1].zwrocWlasciciela() == Wlasciciel.wnikt){
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y + i + 1, true);
-                                    PD = true;
-                                    w.xBicia = _x+i;
-                                    w.yBicia = _y+i;
+                                    wPD = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y + i;
                                     mozliweRuchy.add(w);
                                 }
-                            } else {
-                                PD = true;
+                                else{
+                                    wPD = true;
+                                }
+                            }
+                            if(polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2){
+                                wPD = true;
                             }
                         }
                     }
-                    if (PG == false) {
-                        if ((_x + i) < 8 && (_y - i) < 8) { // sprawdzam prawo gora
+                    if (wPG == false) {
+                        if ((_x + i) < 8 && (_y - i) > -1) { // sprawdzam prawo dol
                             if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wnikt) {
                                 WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i, _y - i, false);
                                 mozliweRuchy.add(w);
-                            } else if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                                if (_x + i + 1 < 8 && _y - i - 1 < 8) {
+                            }
+                            if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                                if (_x + i + 1 < 8 && _y - i - 1 > -1 && polaPlanszy[_x + i + 1][_y - i - 1].zwrocWlasciciela() == Wlasciciel.wnikt){
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y - i - 1, true);
-                                    PG = true;
-                                    w.xBicia = _x+i;
-                                    w.yBicia = _y-i;
+                                    wPG = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y - i;
                                     mozliweRuchy.add(w);
                                 }
-                            } else {
-                                PG = true;
+                                else{
+                                    wPG = true;
+                                }
+                            }
+                            if(polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2){
+                                wPG = true;
                             }
                         }
                     }
-                    if (LG == false) {
-                        if ((_x - i) < 8 && (_y - i) < 8) { // sprawdzam prawo dol
+                    if (wLG == false) {
+                        if ((_x - i) > -1 && (_y - i) > -1) { // sprawdzam prawo dol
                             if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wnikt) {
                                 WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i, _y - i, false);
                                 mozliweRuchy.add(w);
-                            } else if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                                if (_x - i - 1 < 8 && _y - i - 1 < 8) {
+                            }
+                            if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                                if (_x - i - 1 > -1 && _y - i - 1 > -1 && polaPlanszy[_x - i - 1][_y - i - 1].zwrocWlasciciela() == Wlasciciel.wnikt){
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y - i - 1, true);
-                                    LG = true;
-                                    w.xBicia = _x-i;
-                                    w.yBicia = _y-i;
+                                    wLG = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y + i;
                                     mozliweRuchy.add(w);
                                 }
-                            } else {
-                                LG = true;
+                                else{
+                                    wLG = true;
+                                }
+                            }
+                            if(polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2){
+                                wLG = true;
                             }
                         }
                     }
-                    if (LD == false) {
-                        if ((_x - i) < 8 && (_y + i) < 8) { // sprawdzam prawo dol
+                    if (wLD == false) {
+                        if ((_x - i) > -1 && (_y + i) < 8) { // sprawdzam prawo dol
                             if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wnikt) {
                                 WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i, _y + i, false);
                                 mozliweRuchy.add(w);
-                            } else if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                                if (_x - i - 1 < 8 && _y + i + 1 < 8) {
+                            }
+                            if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                                if (_x - i - 1 > -1 && _y + i + 1 < 8 && polaPlanszy[_x - i - 1][_y + i + 1].zwrocWlasciciela() == Wlasciciel.wnikt){
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y + i + 1, true);
-                                    LD = true;
-                                    w.xBicia = _x-i;
-                                    w.yBicia = _y+i;
+                                    wLD = true;
+                                    w.xBicia = _x - i;
+                                    w.yBicia = _y + i;
                                     mozliweRuchy.add(w);
                                 }
-                            } else {
-                                LD = true;
+                                else{
+                                    wLD = true;
+                                }
+                            }
+                            if(polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2){
+                                wLD = true;
+                            }
+                        }
+                    }
+                }
+            } else if (czyjRuch == CzyjRuch.rgracz1) {
+                for (int i = 1; i < 7; i++) {
+                    if(wPD == false){
+                        if ((_x + i) < 8 && (_y + i) < 8) { // sprawdzam prawo dol
+                            if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wnikt) {
+                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i, _y + i, false);
+                                mozliweRuchy.add(w);
+                            }
+                            if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                                if (_x + i + 1 < 8 && _y + i + 1 < 8 && polaPlanszy[_x + i+1][_y + i+1].zwrocWlasciciela() == Wlasciciel.wnikt){
+                                    WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y + i + 1, true);
+                                    wPD = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y + i;
+                                    mozliweRuchy.add(w);
+                                }
+                                else{
+                                    wPD = true;
+                                }
+                            }
+                            if(polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1){
+                                wPD = true;
+                            }
+                        }
+                    }
+                    if (wPG == false) {
+                        if ((_x + i) < 8 && (_y - i) > -1) { // sprawdzam prawo dol
+                            if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wnikt) {
+                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i, _y - i, false);
+                                mozliweRuchy.add(w);
+                            }
+                            if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                                if (_x + i + 1 < 8 && _y - i - 1 > -1 && polaPlanszy[_x + i+1][_y - i-1].zwrocWlasciciela() == Wlasciciel.wnikt){
+                                    WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y - i - 1, true);
+                                    wPG = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y - i;
+                                    mozliweRuchy.add(w);
+                                }
+                                else{
+                                    wPG = true;
+                                }
+                            }
+                            if(polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1){
+                                wPG = true;
+                            }
+                        }
+                    }
+                    if (wLG == false) {
+                        if ((_x - i) > -1 && (_y - i) > -1) { // sprawdzam prawo dol
+                            if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wnikt) {
+                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i, _y - i, false);
+                                mozliweRuchy.add(w);
+                            }
+                            if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                                if (_x - i - 1 > -1 && _y - i - 1 > -1 && polaPlanszy[_x - i-1][_y - i-1].zwrocWlasciciela() == Wlasciciel.wnikt){
+                                    WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y - i - 1, true);
+                                    wLG = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y + i;
+                                    mozliweRuchy.add(w);
+                                }
+                                else{
+                                    wLG = true;
+                                }
+                            }
+                            if(polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1){
+                                wLG = true;
+                            }
+                        }
+                    }
+                    if (wLD == false) {
+                        if ((_x - i) > -1 && (_y + i) < 8) { // sprawdzam prawo dol
+                            if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wnikt) {
+                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i, _y + i, false);
+                                mozliweRuchy.add(w);
+                            }
+                            if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                                if (_x - i - 1 > -1 && _y + i + 1 < 8 && polaPlanszy[_x - i-1][_y + i+1].zwrocWlasciciela() == Wlasciciel.wnikt){
+                                    WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y + i + 1, true);
+                                    wLD = true;
+                                    w.xBicia = _x - i;
+                                    w.yBicia = _y + i;
+                                    mozliweRuchy.add(w);
+                                }
+                                else{
+                                    wLD = true;
+                                }
+                            }
+                            if(polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1){
+                                wLD = true;
                             }
                         }
                     }
@@ -400,16 +489,16 @@ public class Plansza {
         czyjRuch = _czyjRuch;
     }
 
-    public boolean sprawdzDzialanieUzytkownika(int _x, int _y) { // dodac te przeskalowania
-
+    public boolean sprawdzDzialanieUzytkownika(int _x, int _y) {
         ArrayList wr = new ArrayList();
-        WspolrzedneRuchowe w = new WspolrzedneRuchowe(-1, -1, false);
+        WspolrzedneRuchowe w;
+        System.out.println(xPrzenoszonegoPionka);
         if (poBiciu == false && xPrzenoszonegoPionka != -1) {
-            wr = mozliweRuchy(xPrzenoszonegoPionka, yPrzenoszonegoPionka, Pionek.pionekZwykly); // po zbiciu jako xPrzenoszonegoPionka,yPrzenoszonegoPionka
+            wr = mozliweRuchy(xPrzenoszonegoPionka, yPrzenoszonegoPionka, polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].pionek); // po zbiciu jako xPrzenoszonegoPionka,yPrzenoszonegoPionka
         }                                                                  // jest ustawiane te Pole
         if (poBiciu == true) {
             wr = mozliweRuchyPoBiciu(xPrzenoszonegoPionka, yPrzenoszonegoPionka);
-        }
+       }
         if (czyjRuch == CzyjRuch.rgracz1 && silnik == Silnik.serwer) { //serwer znaczy gracz1
             if (przebiegGry == true) { // warunek na to ze toczy sie gra
                 if (xPrzenoszonegoPionka != -1) { // czyli wczesniej wybrany juz pionek do ruchu
@@ -430,53 +519,46 @@ public class Plansza {
                                 ge1.setMessage("remove|" + w.xBicia + "|" + w.yBicia);
                                 Main.getInstance().sendMessage(ge1);
 
-                                GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
-                                ge2.setMessage("right_to_move|2");
-                                Main.getInstance().sendMessage(ge2);
-
-//                                GameEvent ge = new GameEvent(GameEvent.SB_SHOT);
-//                                ge.setMessage(xPrzenoszonegoPionka + "|" + yPrzenoszonegoPionka + "|" + _x + "|" + _y);
-//                                Main.getInstance().sendMessage(ge);
 
                                 xPrzenoszonegoPionka = _x; // punkt z tad biere i
                                 yPrzenoszonegoPionka = _y; // ustawiam do sprawdzania kolejnego bicia
+
                                 poBiciu = true;
-
-
                                 return true;
                             }
-                            // sprawdzam czy nie ma fucha
-                            boolean byloBicie = false;
-                            byloBicie = this.sprawdzCzyByloBicie(CzyjRuch.rgracz1);
-                            if (byloBicie == true) {//gdy fuch usuwam pionek
-                                polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].ustawWlasciciela(Wlasciciel.wnikt);
-                                czyjRuch = CzyjRuch.rgracz2;
-                                xPrzenoszonegoPionka = -1;
-                                yPrzenoszonegoPionka = -1;
-                                return false;
-                            } else { // nie bylo fucha wiec tylko przestawiam
-                                polaPlanszy[_x][_y].ustawWlasciciela(Wlasciciel.wgracz1);
-                                polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].ustawWlasciciela(Wlasciciel.wnikt);
-                                polaPlanszy[_x][_y].pionek = polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].pionek;
-
-                                GameEvent ge = new GameEvent(GameEvent.C_CHAT_MSG);
-                                ge.setMessage("move|" + xPrzenoszonegoPionka + "|" + yPrzenoszonegoPionka + "|" + _x + "|" + _y);
-                                Main.getInstance().sendMessage(ge);
-
-                                GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
-                                ge2.setMessage("right_to_move|2");
-                                Main.getInstance().sendMessage(ge2);
-
-//                                GameEvent ge = new GameEvent(GameEvent.SB_SHOT);
-//                                ge.setMessage(xPrzenoszonegoPionka + "|" + yPrzenoszonegoPionka + "|" + _x + "|" + _y);
-//                                Main.getInstance().sendMessage(ge);
-
-                                xPrzenoszonegoPionka = -1;
-                                yPrzenoszonegoPionka = -1;
-                                czyjRuch = CzyjRuch.rgracz2;
+                            else{
+                                // sprawdzam czy nie ma fucha
+                                boolean byloBicie = false;
+                                byloBicie = this.sprawdzCzyByloBicie(CzyjRuch.rgracz1);
+                                if (byloBicie == true) {//gdy fuch usuwam pionek
+                                    czyjRuch = CzyjRuch.rgracz2;
 
 
-                                return false;
+                                    GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
+                                    ge2.setMessage("right_to_move|2");
+                                    Main.getInstance().sendMessage(ge2);
+
+                                    xPrzenoszonegoPionka = -1;
+                                    yPrzenoszonegoPionka = -1;
+                                    return false;
+                                } else { // nie bylo fucha wiec tylko przestawiam
+                                    polaPlanszy[_x][_y].ustawWlasciciela(Wlasciciel.wgracz1);
+                                    polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].ustawWlasciciela(Wlasciciel.wnikt);
+                                    polaPlanszy[_x][_y].pionek = polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].pionek;
+
+                                    GameEvent ge = new GameEvent(GameEvent.C_CHAT_MSG);
+                                    ge.setMessage("move|" + xPrzenoszonegoPionka + "|" + yPrzenoszonegoPionka + "|" + _x + "|" + _y);
+                                    Main.getInstance().sendMessage(ge);
+
+                                    GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
+                                    ge2.setMessage("right_to_move|2");
+                                    Main.getInstance().sendMessage(ge2);
+
+                                    xPrzenoszonegoPionka = -1;
+                                    yPrzenoszonegoPionka = -1;
+                                    czyjRuch = CzyjRuch.rgracz2;
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -515,53 +597,43 @@ public class Plansza {
                                 ge1.setMessage("remove|" + w.xBicia + "|" + w.yBicia);
                                 Main.getInstance().sendMessage(ge1);
 
-                                GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
-                                ge2.setMessage("right_to_move|1");
-                                Main.getInstance().sendMessage(ge2);
-
-//                                GameEvent ge = new GameEvent(GameEvent.SB_SHOT);
-//                                ge.setMessage(xPrzenoszonegoPionka + "|" + yPrzenoszonegoPionka + "|" + _x + "|" + _y);
-//                                Main.getInstance().sendMessage(ge);
-
                                 xPrzenoszonegoPionka = _x; // punkt z tad biere i
                                 yPrzenoszonegoPionka = _y; // ustawiam do sprawdzania kolejnego bicia
                                 poBiciu = true;
-
-
-
                                 return true;
                             }
-                            // sprawdzam czy nie ma fucha
-                            boolean byloBicie = false;
-                            byloBicie = this.sprawdzCzyByloBicie(CzyjRuch.rgracz2);
-                            if (byloBicie == true) {//gdy fuch usuwam pionek
-                                polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].ustawWlasciciela(Wlasciciel.wnikt);
-                                czyjRuch = CzyjRuch.rgracz1;
-                                xPrzenoszonegoPionka = -1;
-                                yPrzenoszonegoPionka = -1;
-                                return false;
-                            } else {//nie bylo fucha wiec tylko przestawiam
-                                polaPlanszy[_x][_y].ustawWlasciciela(Wlasciciel.wgracz2);
-                                polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].ustawWlasciciela(Wlasciciel.wnikt);
-                                polaPlanszy[_x][_y].pionek = polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].pionek;
+                            else{
+                                // sprawdzam czy nie ma fucha
+                                boolean byloBicie = false;
+                                byloBicie = this.sprawdzCzyByloBicie(CzyjRuch.rgracz2);
+                                if (byloBicie == true) {//gdy fuch usuwam pionek
+                                    czyjRuch = CzyjRuch.rgracz1;
 
-                                GameEvent ge = new GameEvent(GameEvent.C_CHAT_MSG);
-                                ge.setMessage("move|" + xPrzenoszonegoPionka + "|" + yPrzenoszonegoPionka + "|" + _x + "|" + _y);
-                                Main.getInstance().sendMessage(ge);
+                                    GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
+                                    ge2.setMessage("right_to_move|1");
+                                    Main.getInstance().sendMessage(ge2);
 
-                                GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
-                                ge2.setMessage("right_to_move|1");
-                                Main.getInstance().sendMessage(ge2);
+                                    xPrzenoszonegoPionka = -1;
+                                    yPrzenoszonegoPionka = -1;
+                                    return false;
+                                } else {//nie bylo fucha wiec tylko przestawiam
+                                    polaPlanszy[_x][_y].ustawWlasciciela(Wlasciciel.wgracz2);
+                                    polaPlanszy[_x][_y].pionek = polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].pionek;
+                                    polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].ustawWlasciciela(Wlasciciel.wnikt);
 
-//                                GameEvent ge = new GameEvent(GameEvent.SB_SHOT);
-//                                ge.setMessage(xPrzenoszonegoPionka + "|" + yPrzenoszonegoPionka + "|" + _x + "|" + _y);
-//                                Main.getInstance().sendMessage(ge);
+                                    GameEvent ge = new GameEvent(GameEvent.C_CHAT_MSG);
+                                    ge.setMessage("move|" + xPrzenoszonegoPionka + "|" + yPrzenoszonegoPionka + "|" + _x + "|" + _y);
+                                    Main.getInstance().sendMessage(ge);
 
-                                xPrzenoszonegoPionka = -1;
-                                yPrzenoszonegoPionka = -1;
-                                czyjRuch = CzyjRuch.rgracz1;
+                                    GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
+                                    ge2.setMessage("right_to_move|1");
+                                    Main.getInstance().sendMessage(ge2);
 
-                                return false;
+                                    xPrzenoszonegoPionka = -1;
+                                    yPrzenoszonegoPionka = -1;
+                                    czyjRuch = CzyjRuch.rgracz1;
+                                    return false;
+                                }
                             }
                         }
                     }
@@ -584,7 +656,7 @@ public class Plansza {
 
     public ArrayList mozliweRuchyPoBiciu(int _x, int _y) {
         ArrayList mozliweRuchy = new ArrayList();
-        if (polaPlanszy[_x][_y].pionek == Pionek.pionekZwykly) {
+        if (polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].pionek == Pionek.pionekZwykly) {
             if (czyjRuch == CzyjRuch.rgracz1) {//dla gracza1 tylko do przodu
 
                 if ((_y - 1) >= 0 && (_y - 1) <= 7) { // zmieszczenie y tylko jedno
@@ -744,133 +816,156 @@ public class Plansza {
                     }
                 }
             }
-        }
-        else{
-            boolean LG, PG, LD, PD;
-            LG = PG = LD = PD = false;
+        } else {
+            boolean wLG, wPG, wLD, wPD;
+            wLG = wPD = wLD = wPG = false;
             if (czyjRuch == CzyjRuch.rgracz2) {
                 for (int i = 1; i < 8; i++) {
-                    if (PD == false) {
-                        if ((_x + i) < 8 && (_y + i) < 8) { // sprawdzam prawo dol
-                            if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                                if (_x + i + 1 < 8 && _y + i + 1 < 8) {
-                                    WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y + i + 1, true);
-                                    PD = true;
-                                    w.xBicia = _x+i;
-                                    w.yBicia = _y+i;
-                                    mozliweRuchy.add(w);
-                                }
+                    if(wPD == false) {
+                        if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                            if (_x + i + 1 < 8 && _y + i + 1 < 8 && polaPlanszy[_x + i + 1][_y + i + 1].zwrocWlasciciela() == Wlasciciel.wnikt) {
+                                WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y + i + 1, true);
+                                wPD = true;
+                                w.xBicia = _x + i;
+                                w.yBicia = _y + i;
+                                mozliweRuchy.add(w);
                             } else {
-                                PD = true;
+                                wPD = true;
                             }
                         }
+                        if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                            wPD = true;
+                        }
                     }
-                    if (PG == false) {
-                        if ((_x + i) < 8 && (_y - i) < 8) { // sprawdzam prawo gora
+                    if (wPG == false) {
+                        if ((_x + i) < 8 && (_y - i) > -1) { // sprawdzam prawo dol
                             if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                                if (_x + i + 1 < 8 && _y - i - 1 < 8) {
+                                if (_x + i + 1 < 8 && _y - i - 1 > -1 && polaPlanszy[_x + i + 1][_y - i - 1].zwrocWlasciciela() == Wlasciciel.wnikt){
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y - i - 1, true);
-                                    PG = true;
-                                    w.xBicia = _x+i;
-                                    w.yBicia = _y-i;
+                                    wPG = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y - i;
                                     mozliweRuchy.add(w);
                                 }
-                            } else {
-                                PG = true;
+                                else{
+                                    wPG = true;
+                                }
+                            }
+                            if(polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2){
+                                wPG = true;
                             }
                         }
                     }
-                    if (LG == false) {
-                        if ((_x - i) < 8 && (_y - i) < 8) { // sprawdzam prawo dol
+                    if (wLG == false) {
+                        if ((_x - i) > -1 && (_y - i) > -1) { // sprawdzam prawo dol
                             if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                                if (_x - i - 1 < 8 && _y - i - 1 < 8) {
+                                if (_x - i - 1 > -1 && _y - i - 1 > -1 && polaPlanszy[_x - i - 1][_y - i - 1].zwrocWlasciciela() == Wlasciciel.wnikt){
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y - i - 1, true);
-                                    LG = true;
-                                    w.xBicia = _x-i;
-                                    w.yBicia = _y-i;
+                                    wLG = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y + i;
                                     mozliweRuchy.add(w);
                                 }
-                            } else {
-                                LG = true;
+                                else{
+                                    wLG = true;
+                                }
+                            }
+                            if(polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2){
+                                wLG = true;
                             }
                         }
                     }
-                    if (LD == false) {
-                        if ((_x - i) < 8 && (_y + i) < 8) { // sprawdzam prawo dol
+                    if (wLD == false) {
+                        if ((_x - i) > -1 && (_y + i) < 8) { // sprawdzam prawo dol
                             if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                                if (_x - i - 1 < 8 && _y + i + 1 < 8) {
+                                if (_x - i - 1 > -1 && _y + i + 1 < 8 && polaPlanszy[_x - i - 1][_y + i + 1].zwrocWlasciciela() == Wlasciciel.wnikt){
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y + i + 1, true);
-                                    LD = true;
-                                    w.xBicia = _x-i;
-                                    w.yBicia = _y+i;
+                                    wLD = true;
+                                    w.xBicia = _x - i;
+                                    w.yBicia = _y + i;
                                     mozliweRuchy.add(w);
                                 }
-                            }else {
-                                LD = true;
+                                else{
+                                    wLD = true;
+                                }
+                            }
+                            if(polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2){
+                                wLD = true;
                             }
                         }
                     }
                 }
-            }
-            if (czyjRuch == CzyjRuch.rgracz1) {
+            } else if (czyjRuch == CzyjRuch.rgracz1) {
                 for (int i = 1; i < 7; i++) {
-                    if (PD == false) {
+                    if (wPD == false) {
                         if ((_x + i) < 8 && (_y + i) < 8) { // sprawdzam prawo dol
                             if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                                if (_x + i + 1 < 8 && _y + i + 1 < 8) {
+                                if (_x + i + 1 < 8 && _y + i + 1 < 8 && polaPlanszy[_x + i + 1][_y + i + 1].zwrocWlasciciela() == Wlasciciel.wnikt) {
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y + i + 1, true);
-                                    PD = true;
-                                    w.xBicia = _x+i;
-                                    w.yBicia = _y+i;
+                                    wPD = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y + i;
                                     mozliweRuchy.add(w);
+                                } else {
+                                    wPD = true;
                                 }
-                            } else {
-                                PD = true;
+                            }
+                            if (polaPlanszy[_x + i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                                wPD = true;
                             }
                         }
                     }
-                    if (PG == false) {
-                        if ((_x + i) < 8 && (_y - i) < 8) { // sprawdzam prawo gora
+                    if (wPG == false) {
+                        if ((_x + i) < 8 && (_y - i) > -1) { // sprawdzam prawo do
                             if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                                if (_x + i + 1 < 8 && _y - i - 1 < 8) {
+                                if (_x + i + 1 < 8 && _y - i - 1 > -1 && polaPlanszy[_x + i + 1][_y - i - 1].zwrocWlasciciela() == Wlasciciel.wnikt) {
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x + i + 1, _y - i - 1, true);
-                                    PG = true;
-                                    w.xBicia = _x+i;
-                                    w.yBicia = _y-i;
+                                    wPG = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y - i;
                                     mozliweRuchy.add(w);
+                                } else {
+                                    wPG = true;
                                 }
-                            } else {
-                                PG = true;
+                            }
+                            if (polaPlanszy[_x + i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                                wPG = true;
                             }
                         }
                     }
-                    if (LG == false) {
-                        if ((_x - i) < 8 && (_y - i) < 8) { // sprawdzam prawo dol
+                    if (wLG == false) {
+                        if ((_x - i) > -1 && (_y - i) > -1) { // sprawdzam prawo dol
                             if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                                if (_x - i - 1 < 8 && _y - i - 1 < 8) {
+                                if (_x - i - 1 > -1 && _y - i - 1 > -1 && polaPlanszy[_x - i - 1][_y - i - 1].zwrocWlasciciela() == Wlasciciel.wnikt) {
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y - i - 1, true);
-                                    LG = true;
-                                    w.xBicia = _x-i;
-                                    w.yBicia = _y-i;
+                                    wLG = true;
+                                    w.xBicia = _x + i;
+                                    w.yBicia = _y + i;
                                     mozliweRuchy.add(w);
+                                } else {
+                                    wLG = true;
                                 }
-                            } else {
-                                LG = true;
+                            }
+                            if (polaPlanszy[_x - i][_y - i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                                wLG = true;
                             }
                         }
                     }
-                    if (LD == false) {
-                        if ((_x - i) < 8 && (_y + i) < 8) { // sprawdzam prawo dol
+                    if (wLD == false) {
+                        if ((_x - i) > -1 && (_y + i) < 8) { // sprawdzam prawo dol
                             if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                                if (_x - i - 1 < 8 && _y + i + 1 < 8) {
+                                if (_x - i - 1 > -1 && _y + i + 1 < 8 && polaPlanszy[_x - i - 1][_y + i + 1].zwrocWlasciciela() == Wlasciciel.wnikt) {
                                     WspolrzedneRuchowe w = new WspolrzedneRuchowe(_x - i - 1, _y + i + 1, true);
-                                    LD = true;
-                                    w.xBicia = _x-i;
-                                    w.yBicia = _y+i;
+                                    wLD = true;
+                                    w.xBicia = _x - i;
+                                    w.yBicia = _y + i;
                                     mozliweRuchy.add(w);
+                                } else {
+                                    wLD = true;
                                 }
-                            } else {
-                                LD = true;
+                            }
+                            if (polaPlanszy[_x - i][_y + i].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                                wLD = true;
                             }
                         }
                     }
@@ -880,28 +975,44 @@ public class Plansza {
         return mozliweRuchy;
     }
 
+
+
     public void zatrzymajProcesBic() {
         xPrzenoszonegoPionka = -1;
         yPrzenoszonegoPionka = -1;
         poBiciu = false;
         if (CzyjRuch.rgracz1 == czyjRuch) {
             czyjRuch = CzyjRuch.rgracz2;
+            GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
+            ge2.setMessage("right_to_move|2");
+            Main.getInstance().sendMessage(ge2);
             //Grafka.silnik.serwer.wyslijDane(this);// warunek ze to serwer
         } else {
             czyjRuch = CzyjRuch.rgracz1;
+            GameEvent ge2 = new GameEvent(GameEvent.C_CHAT_MSG);
+            ge2.setMessage("right_to_move|1");
+            Main.getInstance().sendMessage(ge2);
         }
 
     }
-    private boolean sprawdzCzyByloBicie(CzyjRuch czyjRuch){
-        if(czyjRuch == CzyjRuch.rgracz1){
-            for(int i = 0; i < 8 ; i++){
-                for (int j = 0; j < 8 ; j++){
-                    if(polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1){
+
+
+    private boolean sprawdzCzyByloBicie(CzyjRuch czyjRuch) {
+        if (czyjRuch == CzyjRuch.rgracz1) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1) {
                         ArrayList w;
-                        w = this.mozliweRuchy(i,j,polaPlanszy[i][j].pionek);
-                        for(int k = 0; k < w.size(); k++){
-                            WspolrzedneRuchowe b = (WspolrzedneRuchowe)w.get(k);
-                            if(b.zBiciem == true){
+                        w = this.mozliweRuchy(i, j, polaPlanszy[i][j].pionek);
+                        for (int k = 0; k < w.size(); k++) {
+                            WspolrzedneRuchowe b = (WspolrzedneRuchowe) w.get(k);
+                            if (b.zBiciem == true) {
+                                polaPlanszy[i][j].ustawWlasciciela(Wlasciciel.wnikt);
+
+                                GameEvent ge1 = new GameEvent(GameEvent.C_CHAT_MSG);
+                                ge1.setMessage("remove|" + i + "|" + j);
+                                Main.getInstance().sendMessage(ge1);
+
                                 return true;
                             }
                         }
@@ -909,16 +1020,20 @@ public class Plansza {
                 }
             }
             return false;
-        }
-        else{
-            for(int i = 0; i < 8 ; i++){
-                for (int j = 0; j < 8 ; j++){
-                    if(polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2){
+        } else {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2) {
                         ArrayList w;
-                        w = this.mozliweRuchy(i,j,polaPlanszy[i][j].pionek);
-                        for(int k = 0; k < w.size(); k++){
-                            WspolrzedneRuchowe b = (WspolrzedneRuchowe)w.get(k);
-                            if(b.zBiciem == true){
+                        w = this.mozliweRuchy(i, j, polaPlanszy[i][j].pionek);
+                        for (int k = 0; k < w.size(); k++) {
+                            WspolrzedneRuchowe b = (WspolrzedneRuchowe) w.get(k);
+                            if (b.zBiciem == true) {
+                                polaPlanszy[i][j].ustawWlasciciela(Wlasciciel.wnikt);
+
+                                GameEvent ge1 = new GameEvent(GameEvent.C_CHAT_MSG);
+                                ge1.setMessage("remove|" + i + "|" + j);
+                                Main.getInstance().sendMessage(ge1);
                                 return true;
                             }
                         }
@@ -928,6 +1043,8 @@ public class Plansza {
             return false;
         }
     }
+
+
     public void zmienStanPola(Wlasciciel wlasciciel, int x, int y, Pionek pionek){
         polaPlanszy[x][y].ustawWlasciciela(wlasciciel);
         polaPlanszy[x][y].pionek = pionek;
@@ -942,6 +1059,18 @@ public class Plansza {
 
         polaPlanszy[x_start][y_start].usunPionek();
         setPionekAt(x_stop, y_stop, wl, pi);
+    }
+
+    public void wprowadzDamki() {
+        for (int i = 0; i < 8; i++) {
+            if (polaPlanszy[i][0].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                polaPlanszy[i][0].pionek = Pionek.pionekDamka;
+            }
+            if (polaPlanszy[i][7].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                polaPlanszy[i][7].pionek = Pionek.pionekDamka;
+                System.out.println("ustawiam");
+            }
+        }
     }
 
     public void setPionekAt(int x, int y, Wlasciciel wl, Pionek pi){
