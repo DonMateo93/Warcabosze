@@ -60,8 +60,6 @@ public class Main extends JFrame{
 
     private JTextArea czatOdbierz = null;
 
-//    private JButton losuj = null;
-
     private JPanel jContentPane = null;
 
     private JLabel jLabel3 = null;
@@ -85,42 +83,6 @@ public class Main extends JFrame{
 
         setVisible(true);
         revalidate();
-
-
-
-//        JPanel mainPanel = new JPanel();
-//        mainPanel.setLayout(new BorderLayout());
-//
-//        Container kontener1 = new Container();
-//        kontener1.setLayout(new BoxLayout(kontener1,BoxLayout.PAGE_AXIS));
-//        kontener1.add(getJScrollPane1(), null);
-//        kontener1.add(getJScrollPane2(), null);
-//        kontener1.add(getKlientRadioButton());
-//        kontener1.add(getStart());
-//        kontener1.add(getPolacz());
-//        kontener1.add(getAdres());
-//        kontener1.add(getSerwer());
-//        kontener1.add(getNowaGra());
-//        kontener1.add(getCzatWyslij());
-//
-//
-//
-//        getContentPane().setLayout(new BorderLayout());
-//        getContentPane().add(mainPanel,BorderLayout.CENTER);
-//        getContentPane().add(kontener1,BorderLayout.EAST);
-//        setLocationRelativeTo(null);
-//        setSize(700,500);
-//        //g.pack();
-//        setResizable(true);
-//        SilnikGry silnik = new SilnikGry();
-//        silnik.ustawSerwer();
-//        paintPlansza(mainPanel,silnik);
-//
-//        port = 4545;
-//        adres.setText("localhost");
-//
-//        setVisible(true);
-//        revalidate();
     }
 
     private JPanel getJContentPane(SilnikGry silnik) {
@@ -155,7 +117,6 @@ public class Main extends JFrame{
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Main g = new Main("nazwa");
-                //Main g2 = new Main("nazwa2");
             }
         });
     }
@@ -183,8 +144,6 @@ public class Main extends JFrame{
 
     private void processMessages() {
         GameEvent ge;
-
-
         while (client != null && client.isAlive()
                 && (ge = client.receiveMessage()) != null) {
 
@@ -260,32 +219,9 @@ public class Main extends JFrame{
                 case GameEvent.SB_LOGIN:
                     if (getID().compareTo(ge.getMessage()) != 0) {
                         zmienStatus(
-                                "Przyłaczył się drugi gracz!\nUstaw swoje statki a następnie naciśnij przycisk \"Rozpocznij grę\"",
+                                "Przyłaczył się drugi gracz!\n Wciśnij przycisk \"Rozpocznij grę\" aby rozpocząć",
                                 RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
                     }
-                    break;
-
-                case GameEvent.MOVE_CHECKER:
-//                    String s1 = ge.getMessage();
-//                    int idx11 = s1.indexOf('|');
-//                    int idx21 = s1.indexOf('|', idx11 + 1);
-//                    int idx31 = s1.indexOf('|', idx21 + 1);
-//
-//                    String a1 = s1.substring(0, idx11);
-//                    String b1 = s1.substring(idx11 + 1, idx21);
-//                    String c1 = s1.substring(idx21 + 1, idx31);
-//                    String d1 = s1.substring(idx31 + 1);
-//
-//                    int x_start = Integer.parseInt(a1);
-//                    int y_start = Integer.parseInt(b1);
-//                    int x_stop = Integer.parseInt(c1);
-//                    int y_stop = Integer.parseInt(d1);
-//
-//                    zmienStatus("Ruszyl sie", RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
-//
-//                    plansza.przesunPionek(x_start, y_start, x_stop, y_stop);
-//                    plansza_g.repaint();
-
                     break;
 
                 case GameEvent.SB_CAN_JOIN_GAME:
@@ -297,117 +233,32 @@ public class Main extends JFrame{
                         zmienStatus("Oczekiwanie na gotowość przeciwnika...",
                                 RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
                     } else if (nowaGra.isEnabled()) {
-//                        if (losuj.isEnabled()) {
-//                            zmienStatus(
-//                                    "Przeciwnik jest już gotowy\nUstaw swoje statki a następnie naciśnij przycisk \"Rozpocznij grę\"",
-//                                    RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
-//                        } else {
                             zmienStatus(
-                                    "Przeciwnik jest już gotowy\nNaciśnij przycisk \"Nowa gra\" i ustaw swoje statki, a następnie naciśnij przycisk \"Rozpocznij grę\"",
+                                    "Przeciwnik jest już gotowy\nNaciśnij przycisk \"Rozpocznij grę\"",
                                     RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
-//                        }
                     }
                     break;
                 case GameEvent.SB_START_GAME:
                     if (serwer.isSelected()) {
-                        zmienStatus("Gra rozpoczęta\nTwoja kolej, oddaj strzał!",
+                        zmienStatus("Gra rozpoczęta\nTwoja kolej",
                                 RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
                         setToken(true);
                     } else {
                         zmienStatus(
-                                "Gra rozpoczęta\nPierwszy strzał odda twój przeciwnik!",
+                                "Gra rozpoczęta\nPierwszy ruch odda twój przeciwnik!",
                                 RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
                     }
                     break;
 
-                case GameEvent.SB_SHOT:
-                    czatOdbierz.append(ge.getMessage() + "\n");
-                    scrollChatBox();
-                    break;
-
-                case GameEvent.SB_SHOT_RESULT: {
-
-//                    String s = ge.getMessage();
-//                    int idx1 = s.indexOf('|');
-//                    int idx2 = s.indexOf('|', idx1 + 1);
-//                    String a = s.substring(0, idx1);
-//                    String b = s.substring(idx1 + 1, idx2);
-//                    String c = s.substring(idx2 + 1);
+//                case GameEvent.SB_SHOT:
+//                    czatOdbierz.append(ge.getMessage() + "\n");
+//                    scrollChatBox();
+//                    break;
 //
-//                    try {
-//                        int x = Integer.parseInt(a);
-//                        int y = Integer.parseInt(b);
-//                        int n = Integer.parseInt(c);
-////                        WynikStrzalu w = WynikStrzalu.values()[n];
+//                case GameEvent.SB_SHOT_RESULT: {
 //
-//                        if (getID().compareTo(ge.getPlayerId()) != 0) {
-//                            //planszaPrzeciwnika.zaznaczStrzal(x, y, w);
-//                        } else {
-//                            //planszaGracza.zaznaczStrzal(x, y, w);
-//                        }
-//
-//                        if (w == WynikStrzalu.PUDLO) {
-//                            if (getID().compareTo(ge.getPlayerId()) != 0) {
-//                                zmienStatus(
-//                                        "Nie trafiłeś\nTeraz strzela przeciwnik",
-//                                        RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
-//                            } else {
-//                                zmienStatus(
-//                                        "Przeciwnik nie trafił\nTeraz twoja kolej, strzelaj!",
-//                                        RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
-//                                setToken(true);
-//                            }
-//                        } else {
-//                            if (w == WynikStrzalu.TRAFIONY) {
-//                                if (getID().compareTo(ge.getPlayerId()) != 0) {
-//                                    zmienStatus(
-//                                            "Trafiłeś statek przeciwnika, ale nie jest on jeszcze zatopiony\nStrzelaj jeszcze raz!",
-//                                            RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
-//                                    setToken(true);
-//                                } else {
-//                                    zmienStatus(
-//                                            "Przeciwnik trafił w twój statek, ale nie jest on jeszcze zatopiony\nKolejny strzał należy do przeciwnika",
-//                                            RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
-//                                }
-//                            } else { // TRAFIONY_ZATOPIONY
-//                                if (getID().compareTo(ge.getPlayerId()) != 0) {
-//                                    zmienStatus(
-//                                            "Zatopiłeś statek przeciwnika!\nStrzelaj jeszcze raz!",
-//                                            RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
-//                                    statkiPrzeciwnikaPodsumowanie
-//                                            .setText(++trafioneStatkiPrzeciwnika
-//                                                    + "/" + liczbaStatkow);
-//                                    if (trafioneStatkiPrzeciwnika == liczbaStatkow) {
-//                                        zmienStatus(
-//                                                "WYGRAŁEŚ!!!\nZatopiłeś wszystkie statki przeciwnika!\nJeśli chcesz rozpocząć nową grę naciśnij przycisk\n\"Nowa Gra\"",
-//                                                RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
-//                                        GameEvent geOut = new GameEvent(
-//                                                GameEvent.C_QUIT_GAME);
-//                                        sendMessage(geOut);
-//                                        kolejnaGra();
-//                                    } else {
-//                                        setToken(true);
-//                                    }
-//                                } else {
-//                                    zmienStatus(
-//                                            "Przeciwnik zatopił twój statek!\nKolejny strzał należy do przeciwnika",
-//                                            RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
-//                                    statkiGraczaPodsumowanie
-//                                            .setText(++trafioneStatkiGracza + "/"
-//                                                    + liczbaStatkow);
-//                                    if (trafioneStatkiGracza == liczbaStatkow) {
-//                                        zmienStatus(
-//                                                "PRZEGRAŁEŚ!!!\nPrzeciwnik zatopił całą twoją flotę!\nJeśli chesz rozpocząć nową grę naciśnij przycisk \"Nowa Gra\"",
-//                                                RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
-//                                        kolejnaGra();
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    } catch (NumberFormatException ex) {
-//                    }
-                }
-                break;
+//                }
+//                break;
 
                 case GameEvent.SB_PLAYER_QUIT:
                     zerwanePolaczenie();
@@ -441,18 +292,15 @@ public class Main extends JFrame{
             ustawOdNowa();
             polacz.setEnabled(true);
         } else {
-//            if (!losuj.isEnabled()) {
-//                //resetujPlansze();
-//            }
             nowaGra.setText("Rozpocznij grę");
             nowaGra.setEnabled(false);
- //           losuj.setEnabled(true);
         }
+
         zmienStatus("Połączenie zostało przerwane!",
                 RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
     }
 
-    private String getID() {
+    public String getID() {
         return (serwer.isSelected()) ? "ID_SERVER" : "ID_CLIENT";
     }
 
@@ -491,7 +339,6 @@ public class Main extends JFrame{
         polacz.setText("Połącz");
         czatWyslij.setEnabled(false);
         nowaGra.setEnabled(false);
-//        losuj.setEnabled(true);
         serwer.setEnabled(true);
         klient.setEnabled(true);
         adres.setEnabled(true);
@@ -555,18 +402,8 @@ public class Main extends JFrame{
             nowaGra.setSize(new Dimension(131, 23));
             nowaGra.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-//                    if (losuj.isEnabled()) {
-//                        nowaGra.setEnabled(false);
-//                        losuj.setEnabled(false);
-//                        GameEvent ge = new GameEvent(GameEvent.C_JOIN_GAME);
-//                        sendMessage(ge);
-//                    } else {
-//                        losuj.setEnabled(true);
-//                        nowaGra.setText("Rozpocznij grę");
-//                        zmienStatus(
-//                                "Ustaw swoje statki a następnie naciśnij przycisk \"Rozpocznij grę\"",
-//                                RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
-//                    }
+                    plansza.przebiegGry = true;
+                    plansza_g.repaint();
                 }
             });
         }
@@ -761,7 +598,7 @@ public class Main extends JFrame{
             status.setWrapStyleWord(true);
             status.setFont(new Font("Dialog", Font.BOLD, 12));
             zmienStatus(
-                    "Witaj w grze Statki\nAby rozpocząć grę wybierz odpowiednią opcję: serwer lub klient, uzupełnij wymagane dane, a następnie naciśnij przycisk Start lub Połącz.",
+                    "Witaj w grze Warcaby\nAby rozpocząć grę wybierz odpowiednią opcję: serwer lub klient, uzupełnij wymagane dane, a następnie naciśnij przycisk Start lub Połącz.",
                     RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
 
         }

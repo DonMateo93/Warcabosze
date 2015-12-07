@@ -77,6 +77,10 @@ public class Plansza {
         yPrzenoszonegoPionka = -1;
     }
 
+    public double getHeight_weight() {
+        return height_weight;
+    }
+
     public void ustawWlascicieli() {
         for (int i = 0; i < 8; i++) {
             switch (i) {

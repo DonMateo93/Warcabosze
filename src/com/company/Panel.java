@@ -26,6 +26,7 @@ public class Panel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         for(int i=0 ; i< 8 ;i++){
             for(int j=0 ; j< 8 ;j++){
                 if(plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1){

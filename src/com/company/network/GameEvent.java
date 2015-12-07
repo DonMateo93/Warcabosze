@@ -67,18 +67,6 @@ public class GameEvent {
 
 	/** Swerwer przesyła wiadomość tekstową do wszystkich graczy */
 	public static final int SB_CHAT_MSG = 1202;
-
-	/** Gracz strzela do przeciwnika */
-	public static final int C_SHOT = 1301;
-
-	/** Serwer przesyla informacje o strzale gracza */
-	public static final int SB_SHOT = 1302;
-
-	/** Wynik Strzału */
-	public static final int C_SHOT_RESULT = 1304;
-
-	/** Serwer rozszyła wynik strzału */
-	public static final int SB_SHOT_RESULT = 1305;	
 	
 	/** */
 	public static final int C_DEAD = 1308;
@@ -91,10 +79,6 @@ public class GameEvent {
 
 	/**  */
 	public static final int SB_GAME_OVER = 1311;
-
-	/** Serwer rozszyła wynik strzału */
-	public static final int MOVE_CHECKER = 2000;
-	// -----------------------------------------------------
 
 	/** Typ zdarzenia */
 	private int eventType;

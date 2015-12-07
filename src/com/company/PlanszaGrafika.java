@@ -34,53 +34,130 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
     @Override
     public void paintComponent(Graphics g){
         //super.paintComponent(g);
-        for(int i=0 ; i< 8 ;i++){
-            for(int j=0 ; j< 8 ;j++){
 
-                boolean isPossibleMove = false;
+        Graphics2D g2d = (Graphics2D)g;
 
-                for (int l = 0; l < mozliwe_ruchy.size(); l++) {
-                    WspolrzedneRuchowe wr = (WspolrzedneRuchowe) (mozliwe_ruchy.get(l));
-                    if (wr.getX() == i && wr.getY() == j) {
-                        isPossibleMove = true;
-                        break;
-                    }
-                }
+        if(this.plansza.przebiegGry) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
 
+                    boolean isPossibleMove = false;
+                    for (int l = 0; l < mozliwe_ruchy.size(); l++) {
 
-
-                if((int)active_point.getX() == i && (int)active_point.getY() == j) {
-                    g.setColor(Color.GRAY);
-
-                }else if(isPossibleMove){
-                    g.setColor(Color.cyan);
-                }else{
-                    g.setColor(plansza.polaPlanszy[i][j].getColor());
-                }
-                g.drawRect((int)plansza.polaPlanszy[i][j].getX(),(int)plansza.polaPlanszy[i][j].getY(), (int)plansza.polaPlanszy[i][j].getHeight(), (int)plansza.polaPlanszy[i][j].getWidth());
-                g.fillRect((int)plansza.polaPlanszy[i][j].getX(),(int)plansza.polaPlanszy[i][j].getY(), (int)plansza.polaPlanszy[i][j].getHeight(), (int)plansza.polaPlanszy[i][j].getWidth());
-
-                if(plansza.polaPlanszy[i][j].zwrocWlasciciela() != Wlasciciel.wnikt) {
-
-                    int help = (int) (rect_size * 0.1);
-                    g.setColor(Color.red);
-
-                    if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                        g.setColor(Color.red);
-                    } else if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                        g.setColor(Color.green);
+                        WspolrzedneRuchowe wr = (WspolrzedneRuchowe) (mozliwe_ruchy.get(l));
+                        if (wr.getX() == i && wr.getY() == j) {
+                            isPossibleMove = true;
+                            break;
+                        }
                     }
 
-                    g.drawOval((int)plansza.polaPlanszy[i][j].getX() + help, (int)plansza.polaPlanszy[i][j].getY() + help, (int)plansza.polaPlanszy[i][j].getHeight() - 2 * help, (int)plansza.polaPlanszy[i][j].getWidth() - 2 * help);
-                    g.fillOval((int)plansza.polaPlanszy[i][j].getX() + help, (int)plansza.polaPlanszy[i][j].getY() + help, (int)plansza.polaPlanszy[i][j].getHeight() - 2 * help, (int)plansza.polaPlanszy[i][j].getWidth() - 2 * help);
-
-                    if(plansza.polaPlanszy[i][j].getPionek() == Pionek.pionekDamka){
-                        g.setColor(Color.black);
-                        g.drawOval((int)plansza.polaPlanszy[i][j].getX() + 3*help,(int)plansza.polaPlanszy[i][j].getY() + 3 * help, (int)plansza.polaPlanszy[i][j].getHeight() - 6 * help, (int)plansza.polaPlanszy[i][j].getWidth() - 6 * help);
-                        g.fillOval((int)plansza.polaPlanszy[i][j].getX() + 3*help,(int)plansza.polaPlanszy[i][j].getY() + 3 * help, (int)plansza.polaPlanszy[i][j].getHeight() - 6 * help, (int)plansza.polaPlanszy[i][j].getWidth() - 6 * help);
-
+                    if(Main.getInstance().getID().equals("ID_SERVER")){
+                        paintSzachownicaUtil(g2d,i,j,isPossibleMove);
+                    } else {
+                        paintSzachownicaRotatedUtil(g2d,i,j,isPossibleMove);
                     }
                 }
+            }
+        } else {
+            paintSzachownica(g2d);
+        }
+    }
+
+    public void paintSzachownicaRotatedUtil(Graphics2D g2d, int i, int j, boolean isPossibleMove){
+
+        if ((int) active_point.getX() == i && (int) active_point.getY() == j) {
+            g2d.setColor(Color.GRAY);
+        } else if (isPossibleMove) {
+            g2d.setColor(Color.cyan);
+        } else {
+            g2d.setColor(plansza.polaPlanszy[i][j].getColor());
+        }
+
+        double height = plansza.getHeight_weight();
+
+        g2d.drawRect(((int) height - (int) plansza.polaPlanszy[i][j].getX() - (int) plansza.polaPlanszy[i][j].getHeight()),
+                ((int)height - (int) plansza.polaPlanszy[i][j].getY() - (int)plansza.polaPlanszy[i][j].getHeight()),
+                ((int) plansza.polaPlanszy[i][j].getHeight()), (int) plansza.polaPlanszy[i][j].getWidth());
+
+        g2d.fillRect(((int) height - (int) plansza.polaPlanszy[i][j].getX() - (int) plansza.polaPlanszy[i][j].getHeight()),
+                ((int)height - (int) plansza.polaPlanszy[i][j].getY() - (int)plansza.polaPlanszy[i][j].getHeight()),
+                ((int) plansza.polaPlanszy[i][j].getHeight()), (int) plansza.polaPlanszy[i][j].getWidth());
+
+        if (plansza.polaPlanszy[i][j].zwrocWlasciciela() != Wlasciciel.wnikt) {
+
+            int help = (int) (rect_size * 0.1);
+            g2d.setColor(Color.red);
+
+            if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                g2d.setColor(Color.red);
+            } else if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                g2d.setColor(Color.green);
+            }
+
+            g2d.drawOval(((int) height - (int) plansza.polaPlanszy[i][j].getX() - (int) plansza.polaPlanszy[i][j].getHeight() + help),
+                    ((int)height - (int) plansza.polaPlanszy[i][j].getY() - (int)plansza.polaPlanszy[i][j].getHeight() + help),
+                    ((int) plansza.polaPlanszy[i][j].getHeight() - 2 * help), (int) plansza.polaPlanszy[i][j].getWidth() - 2 * help);
+
+            g2d.fillOval(((int) height - (int) plansza.polaPlanszy[i][j].getX() - (int) plansza.polaPlanszy[i][j].getHeight() + help),
+                    ((int)height - (int) plansza.polaPlanszy[i][j].getY() - (int)plansza.polaPlanszy[i][j].getHeight() + help),
+                    ((int) plansza.polaPlanszy[i][j].getHeight() - 2 * help), (int) plansza.polaPlanszy[i][j].getWidth() - 2 * help);
+
+            if (plansza.polaPlanszy[i][j].getPionek() == Pionek.pionekDamka) {
+                g2d.setColor(Color.black);
+                g2d.drawOval(((int) height - (int) plansza.polaPlanszy[i][j].getX() - (int) plansza.polaPlanszy[i][j].getHeight() + 3 * help),
+                        ((int)height - (int) plansza.polaPlanszy[i][j].getY() - (int)plansza.polaPlanszy[i][j].getHeight() + 3 * help),
+                        ((int) plansza.polaPlanszy[i][j].getHeight() - 6 * help), (int) plansza.polaPlanszy[i][j].getWidth() - 6 * help);
+
+                g2d.fillOval(((int) height - (int) plansza.polaPlanszy[i][j].getX() - (int) plansza.polaPlanszy[i][j].getHeight() + 3 * help),
+                        ((int)height - (int) plansza.polaPlanszy[i][j].getY() - (int)plansza.polaPlanszy[i][j].getHeight() + 3 * help),
+                        ((int) plansza.polaPlanszy[i][j].getHeight() - 6 * help), (int) plansza.polaPlanszy[i][j].getWidth() - 6 * help);
+
+            }
+        }
+    }
+
+    public void paintSzachownicaUtil(Graphics2D g2d, int i, int j, boolean isPossibleMove){
+
+        if ((int) active_point.getX() == i && (int) active_point.getY() == j) {
+            g2d.setColor(Color.GRAY);
+        } else if (isPossibleMove) {
+            g2d.setColor(Color.cyan);
+        } else {
+            g2d.setColor(plansza.polaPlanszy[i][j].getColor());
+        }
+
+        g2d.drawRect((int) plansza.polaPlanszy[i][j].getX(), (int) plansza.polaPlanszy[i][j].getY(), (int) plansza.polaPlanszy[i][j].getHeight(), (int) plansza.polaPlanszy[i][j].getWidth());
+        g2d.fillRect((int) plansza.polaPlanszy[i][j].getX(), (int) plansza.polaPlanszy[i][j].getY(), (int) plansza.polaPlanszy[i][j].getHeight(), (int) plansza.polaPlanszy[i][j].getWidth());
+
+        if (plansza.polaPlanszy[i][j].zwrocWlasciciela() != Wlasciciel.wnikt) {
+
+            int help = (int) (rect_size * 0.1);
+            g2d.setColor(Color.red);
+
+            if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                g2d.setColor(Color.red);
+            } else if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                g2d.setColor(Color.green);
+            }
+
+            g2d.drawOval((int) plansza.polaPlanszy[i][j].getX() + help, (int) plansza.polaPlanszy[i][j].getY() + help, (int) plansza.polaPlanszy[i][j].getHeight() - 2 * help, (int) plansza.polaPlanszy[i][j].getWidth() - 2 * help);
+            g2d.fillOval((int) plansza.polaPlanszy[i][j].getX() + help, (int) plansza.polaPlanszy[i][j].getY() + help, (int) plansza.polaPlanszy[i][j].getHeight() - 2 * help, (int) plansza.polaPlanszy[i][j].getWidth() - 2 * help);
+
+            if (plansza.polaPlanszy[i][j].getPionek() == Pionek.pionekDamka) {
+                g2d.setColor(Color.black);
+                g2d.drawOval((int) plansza.polaPlanszy[i][j].getX() + 3 * help, (int) plansza.polaPlanszy[i][j].getY() + 3 * help, (int) plansza.polaPlanszy[i][j].getHeight() - 6 * help, (int) plansza.polaPlanszy[i][j].getWidth() - 6 * help);
+                g2d.fillOval((int) plansza.polaPlanszy[i][j].getX() + 3 * help, (int) plansza.polaPlanszy[i][j].getY() + 3 * help, (int) plansza.polaPlanszy[i][j].getHeight() - 6 * help, (int) plansza.polaPlanszy[i][j].getWidth() - 6 * help);
+
+            }
+        }
+    }
+
+    public void paintSzachownica(Graphics2D g2d){
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                g2d.setColor(plansza.polaPlanszy[i][j].getColor());
+                g2d.drawRect((int) plansza.polaPlanszy[i][j].getX(), (int) plansza.polaPlanszy[i][j].getY(), (int) plansza.polaPlanszy[i][j].getHeight(), (int) plansza.polaPlanszy[i][j].getWidth());
+                g2d.fillRect((int) plansza.polaPlanszy[i][j].getX(), (int) plansza.polaPlanszy[i][j].getY(), (int) plansza.polaPlanszy[i][j].getHeight(), (int) plansza.polaPlanszy[i][j].getWidth());
             }
         }
     }
@@ -92,56 +169,64 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
             for(int j = 0; j < 8; j++) {
                 if ((plansza.polaPlanszy[i][j]).contains(e.getPoint())) {
 
-                    //if(plansza.polaPlanszy[i][j].zwrocWlasciciela()
-
-                    if (plansza.polaPlanszy[i][j].getColor() == Color.black) {
-                        System.out.println("czarny");
-                        if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                            System.out.println("gracz1");
-                            plansza.polaPlanszy[i][j].setClicked(true);
-                            active_point.setLocation(i,j);
-                            mozliwe_ruchy = plansza.mozliweRuchy(i,j,(plansza.polaPlanszy[i][j]).getPionek());
-
-                            for(int k = 0; k < mozliwe_ruchy.size(); k++){
-                                WspolrzedneRuchowe wspolrzedna = (WspolrzedneRuchowe)mozliwe_ruchy.get(k);
-                                plansza.polaPlanszy[wspolrzedna.x][wspolrzedna.y].setIsPossibleMove(true);
-                            }
-
-                            Main.getInstance().getSilnik().przekazDzialanieUzytkownika(i,j);
-                            //plansza.sprawdzDzialanieUzytkownika(i,j);
-                        } else if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2){
-                            System.out.println("gracz2");
-                            plansza.polaPlanszy[i][j].setClicked(true);
-                            active_point.setLocation(i,j);
-                            mozliwe_ruchy = plansza.mozliweRuchy(i,j,(plansza.polaPlanszy[i][j]).getPionek());
-
-                            for(int k = 0; k < mozliwe_ruchy.size(); k++){
-                                WspolrzedneRuchowe wspolrzedna = (WspolrzedneRuchowe)mozliwe_ruchy.get(k);
-                                plansza.polaPlanszy[wspolrzedna.x][wspolrzedna.y].setIsPossibleMove(true);
-                            }
-
-                            Main.getInstance().getSilnik().przekazDzialanieUzytkownika(i,j);
-                            //plansza.sprawdzDzialanieUzytkownika(i,j);
-                        } else {
-                            Main.getInstance().getSilnik().przekazDzialanieUzytkownika(i,j);
-                            //plansza.sprawdzDzialanieUzytkownika(i,j);
-                            active_point.setLocation(-1,-1);
-                            mozliwe_ruchy.clear();
-                        }
+                    if(Main.getInstance().getID().equals("ID_SERVER")){
+                        mouseClickedUtil(i,j);
                     } else {
-                        active_point.setLocation(-1,-1);
-                        mozliwe_ruchy.clear();
-                        System.out.println("biały");
-                        if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1) {
-                            System.out.println("gracz1");
-                        } else if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2) {
-                            System.out.println("gracz2");
-                        }
-
+                        mouseClickedUtil(7 - i, 7 - j);
                     }
+
                 }
             }
         repaint();
+    }
+
+    public void mouseClickedUtil(int i, int j){
+
+        if (plansza.polaPlanszy[i][j].getColor() == Color.black) {
+            System.out.println("czarny");
+            if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                System.out.println("gracz1");
+                plansza.polaPlanszy[i][j].setClicked(true);
+                active_point.setLocation(i,j);
+                mozliwe_ruchy = plansza.mozliweRuchy(i,j,(plansza.polaPlanszy[i][j]).getPionek());
+
+                for(int k = 0; k < mozliwe_ruchy.size(); k++){
+                    WspolrzedneRuchowe wspolrzedna = (WspolrzedneRuchowe)mozliwe_ruchy.get(k);
+                    plansza.polaPlanszy[wspolrzedna.x][wspolrzedna.y].setIsPossibleMove(true);
+                }
+
+                Main.getInstance().getSilnik().przekazDzialanieUzytkownika(i,j);
+                //plansza.sprawdzDzialanieUzytkownika(i,j);
+            } else if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2){
+                System.out.println("gracz2");
+                plansza.polaPlanszy[i][j].setClicked(true);
+                active_point.setLocation(i,j);
+                mozliwe_ruchy = plansza.mozliweRuchy(i,j,(plansza.polaPlanszy[i][j]).getPionek());
+
+                for(int k = 0; k < mozliwe_ruchy.size(); k++){
+                    WspolrzedneRuchowe wspolrzedna = (WspolrzedneRuchowe)mozliwe_ruchy.get(k);
+                    plansza.polaPlanszy[wspolrzedna.x][wspolrzedna.y].setIsPossibleMove(true);
+                }
+
+                Main.getInstance().getSilnik().przekazDzialanieUzytkownika(i,j);
+                //plansza.sprawdzDzialanieUzytkownika(i,j);
+            } else {
+                Main.getInstance().getSilnik().przekazDzialanieUzytkownika(i,j);
+                //plansza.sprawdzDzialanieUzytkownika(i,j);
+                active_point.setLocation(-1,-1);
+                mozliwe_ruchy.clear();
+            }
+        } else {
+            active_point.setLocation(-1,-1);
+            mozliwe_ruchy.clear();
+            System.out.println("biały");
+            if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz1) {
+                System.out.println("gracz1");
+            } else if (plansza.polaPlanszy[i][j].zwrocWlasciciela() == Wlasciciel.wgracz2) {
+                System.out.println("gracz2");
+            }
+
+        }
     }
 
     @Override

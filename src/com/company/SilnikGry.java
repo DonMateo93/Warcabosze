@@ -43,7 +43,7 @@ public class SilnikGry{
         szerokoscPola = 50; // funkcji plansza.sprawdzDzialanieUzytkownika() gdzie w parametry funkcji wchodzi juz przeskalowana wartosc
         plansza = new Plansza(wysokoscPola*8);
         plansza.ustawRuch(CzyjRuch.rgracz1);
-        this.plansza.przebiegGry =true;
+        this.plansza.przebiegGry = false;
     }
 
     public void ustawSerwer(){

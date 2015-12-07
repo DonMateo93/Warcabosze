@@ -144,25 +144,6 @@ public class ConnectionListener extends Thread {
 								}
 							}
 							break;
-						case GameEvent.C_SHOT:
-							if (ge.getPlayerId() != "") {
-								GameEvent geOut;
-								geOut = new GameEvent(GameEvent.SB_SHOT, ge
-										.getMessage());
-								geOut.setPlayerId(ge.getPlayerId());
-								sendBroadcastMessage(geOut);
-							}
-							break;
-						case GameEvent.C_SHOT_RESULT:
-							if (ge.getPlayerId() != "") {
-								GameEvent geOut;
-								geOut = new GameEvent(GameEvent.SB_SHOT_RESULT,
-										ge.getMessage());
-								geOut.setPlayerId(ge.getPlayerId());
-								sendBroadcastMessage(geOut);
-							}
-							break;
-
 						case GameEvent.C_QUIT_GAME:
 								joinedClientsCount = 0;
 							break;
