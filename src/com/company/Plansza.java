@@ -72,7 +72,7 @@ public class Plansza {
         poBiciu              = false;
 
         czyjRuch = CzyjRuch.rniczyj;
-        ustawWlascicieli();
+        //ustawWlascicieli();
         xPrzenoszonegoPionka = -1;
         yPrzenoszonegoPionka = -1;
     }
@@ -1073,6 +1073,14 @@ public class Plansza {
             if (polaPlanszy[i][7].zwrocWlasciciela() == Wlasciciel.wgracz2) {
                 polaPlanszy[i][7].pionek = Pionek.pionekDamka;
                 System.out.println("ustawiam");
+            }
+        }
+    }
+
+    public void wyczysc(){
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                polaPlanszy[i][j].ustawWlasciciela(Wlasciciel.wnikt);
             }
         }
     }

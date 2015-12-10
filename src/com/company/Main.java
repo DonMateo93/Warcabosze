@@ -5,6 +5,9 @@ import com.company.network.Server;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -34,6 +37,8 @@ public class Main extends JFrame{
 
     private JScrollPane jScrollPane2 = null;
 
+    private JLabel timerLabel = null;
+
     private JRadioButton klient = null;
 
     private JTextField adres = null;
@@ -46,11 +51,15 @@ public class Main extends JFrame{
 
     private JTextField czatWyslij = null;
 
+    private JTextField timerDisplay = null;
+
     private JButton polacz = null;
 
     private JRadioButton serwer = null;
 
     private JButton nowaGra = null;
+
+    private JButton poddajSie = null;
 
     private Client client = null;
 
@@ -63,6 +72,12 @@ public class Main extends JFrame{
     private JPanel jContentPane = null;
 
     private JLabel jLabel3 = null;
+
+    private TimeWatch watch = null;
+
+    private Timer timeras = null;
+
+    long passedTimeInSeconds = 0;
 
     Main(String _napis){
         super(_napis);
@@ -83,6 +98,49 @@ public class Main extends JFrame{
 
         setVisible(true);
         revalidate();
+
+        timeras = new Timer(500, getActionListener());
+        timeras.start();
+    }
+
+    private JTextField getTimerDisplay(){
+
+        if (timerDisplay == null) {
+            timerDisplay = new JTextField();
+            timerDisplay.setLocation(new Point(420,325 ));
+            timerDisplay.setEnabled(true);
+            timerDisplay.setEditable(false);
+            timerDisplay.setSize(new Dimension(71, 21));
+        }
+
+        return timerDisplay;
+    }
+
+    private ActionListener getActionListener(){
+        ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(watch != null){
+                    passedTimeInSeconds = watch.time(TimeUnit.SECONDS);
+                    if(passedTimeInSeconds >= 60){
+                        int minutes = (int)(passedTimeInSeconds/60);
+                        int seconds = (int)(passedTimeInSeconds - minutes*60);
+                        if(timerDisplay != null) {
+                            timerDisplay.setText(Integer.toString(minutes) + ":" + Integer.toString(seconds));
+                        }
+                    }else{
+                        if(timerDisplay != null) {
+                            timerDisplay.setText("00:" + Integer.toString((int)passedTimeInSeconds));
+                        }
+                    }
+                } else {
+                    if(timerDisplay != null) {
+                        timerDisplay.setText("00:00");
+                    }
+                }
+            }
+        };
+
+        return actionListener;
     }
 
     private JPanel getJContentPane(SilnikGry silnik) {
@@ -97,10 +155,13 @@ public class Main extends JFrame{
             jContentPane.add(getCzatWyslij(), null);
             jContentPane.add(getJScrollPane1(), null);
             jContentPane.add(getJScrollPane2(), null);
+            jContentPane.add(getTimerLabel(),null);
             jContentPane.add(getNowaGra(), null);
+            jContentPane.add(getPoddajSie(), null);
             jContentPane.add(getKlient(), null);
             jContentPane.add(getSerwer(), null);
             jContentPane.add(getAdres(), null);
+            jContentPane.add(getTimerDisplay(),null);
             jContentPane.add(getPolacz(), null);
             jContentPane.add(getStart(), null);
             ButtonGroup grupa = new ButtonGroup();
@@ -112,11 +173,21 @@ public class Main extends JFrame{
         return jContentPane;
     }
 
+    private JLabel getTimerLabel(){
+        if(timerLabel == null){
+            timerLabel = new JLabel("Czas gry:");
+            timerLabel.setBounds(420, 305, 71, 21);
+        }
+
+        return timerLabel;
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Main g = new Main("nazwa");
+
             }
         });
     }
@@ -142,12 +213,15 @@ public class Main extends JFrame{
         }.start();
     }
 
+    private void fake(){
+        int a = 3;
+        int b = 5;
+        int c = a+ b;
+    }
     private void processMessages() {
         GameEvent ge;
         while (client != null && client.isAlive()
                 && (ge = client.receiveMessage()) != null) {
-
-            czatOdbierz.append("zdarzenie ");
 
             switch (ge.getType()) {
                 case GameEvent.SB_CHAT_MSG:
@@ -174,8 +248,6 @@ public class Main extends JFrame{
                                 int x_stop = Integer.parseInt(c1);
                                 int y_stop = Integer.parseInt(d1);
 
-                                zmienStatus("Ruszyl sie", RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
-
                                 plansza.przesunPionek(x_start, y_start, x_stop, y_stop);
                                 plansza_g.repaint();
                             }
@@ -201,7 +273,44 @@ public class Main extends JFrame{
                             } else {
                                 //todo: err;
                             }
+                        } else if(a.equals("failed")){
+                            String a1 = s1.substring(ind + 1);
+                            if(a1.equals(getID())){
+                                zmienStatus("PRZEGRAŁEŚ!!!", RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
+                            }else{
+                                zmienStatus("WYGRAŁEŚ!!!", RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
+                            }
+                            plansza.wyczysc();
+                            plansza_g.repaint();
+                            plansza.przebiegGry = false;
+                            nowaGra.setEnabled(true);
+                            poddajSie.setEnabled(false);
+                            watch = null;
+
+
+                        } else if(a.equals("player_ready")){
+
+                            if(ge.getPlayerId().equals(getID())) {
+                                zmienStatus("Czekaj na gotowość drugiego gracza", RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
+                            }else{
+                                zmienStatus("Drugi gracz jest już gotowy", RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
+                            }
+
+                            silnik.setGraczGotowy(true,ge.getPlayerId());
+                            if(silnik.saObajGraczeGotowi()){
+                                zmienStatus("GRA ROZPOCZĘTA!!!", RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
+                                silnik.setGraczGotowy(false,"ID_SERVER");
+                                silnik.setGraczGotowy(false,"ID_CLIENT");
+                                plansza.przebiegGry = true;
+                                poddajSie.setEnabled(true);
+                                nowaGra.setEnabled(false);
+                                plansza.ustawWlascicieli();
+                                plansza_g.repaint();
+                                fake();
+                                watch = TimeWatch.start();
+                            }
                         }
+
 
                     }else {
                         if (getID().compareTo(ge.getPlayerId()) == 0) {
@@ -249,16 +358,6 @@ public class Main extends JFrame{
                                 RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
                     }
                     break;
-
-//                case GameEvent.SB_SHOT:
-//                    czatOdbierz.append(ge.getMessage() + "\n");
-//                    scrollChatBox();
-//                    break;
-//
-//                case GameEvent.SB_SHOT_RESULT: {
-//
-//                }
-//                break;
 
                 case GameEvent.SB_PLAYER_QUIT:
                     zerwanePolaczenie();
@@ -402,12 +501,32 @@ public class Main extends JFrame{
             nowaGra.setSize(new Dimension(131, 23));
             nowaGra.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    plansza.przebiegGry = true;
-                    plansza_g.repaint();
+                    GameEvent ge = new GameEvent(GameEvent.C_CHAT_MSG);
+                    ge.setMessage("player_ready|");
+                    sendMessage(ge);
                 }
             });
         }
         return nowaGra;
+    }
+
+    public JButton getPoddajSie() {
+        if (poddajSie == null) {
+            poddajSie = new JButton();
+            poddajSie.setLocation(new Point(560, 20));
+            poddajSie.setEnabled(false);
+            poddajSie.setText("Poddaj si\u0119");
+            poddajSie.setSize(new Dimension(131, 23));
+            poddajSie.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    poddajSie.setEnabled(false);
+                    GameEvent ge1 = new GameEvent(GameEvent.C_CHAT_MSG);
+                    ge1.setMessage("failed|" + getID());
+                    Main.getInstance().sendMessage(ge1);
+                }
+            });
+        }
+        return poddajSie;
     }
 
     private JRadioButton getSerwer() {
@@ -514,6 +633,7 @@ public class Main extends JFrame{
                         klient.setEnabled(false);
 
                         String host = "localhost";
+//                        String host = "172.24.216.14";
                         //int port = 4545;
 
                         silnik.ustawSerwer();

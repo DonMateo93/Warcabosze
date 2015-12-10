@@ -1,11 +1,14 @@
 package com.company.network;
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.LinkedList;
 
 public class Server {
 	private int port;
+	InetAddress ip;
 
 	public ServerSocket serverSocket;
 
@@ -25,6 +28,13 @@ public class Server {
 	public boolean start() {
 		try {
 			serverSocket = new ServerSocket(port);
+			//Inet4Address  adres = new Inet4Address("tosh",);"172.24.22.14"
+//			ip =   Inet4Address.getAllByName("tosh")[2];
+//			int backlog = 0;
+//			serverSocket = new ServerSocket(port,backlog, ip);
+//			System.out.println(serverSocket.getInetAddress().toString());
+
+
 		} catch (Exception ex) {
 			return false;
 		}

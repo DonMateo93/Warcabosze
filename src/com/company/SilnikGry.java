@@ -26,6 +26,10 @@ public class SilnikGry{
 
     Gracz gracz;
 
+    private boolean gracz1_gotowy = false;
+
+    private boolean gracz2_gotowy = false;
+
     private Plansza plansza;
 
     Serwer serwer;
@@ -92,5 +96,22 @@ public class SilnikGry{
 
     public Plansza getPlansza() {
         return plansza;
+    }
+
+    public void setGraczGotowy(boolean gotowy,String who) {
+        if (who.equals("ID_SERVER")) {
+            gracz1_gotowy = gotowy;
+        } else if (who.equals("ID_CLIENT")) {
+            gracz2_gotowy = gotowy;
+        }
+
+
+    }
+
+    public boolean saObajGraczeGotowi(){
+        if(gracz2_gotowy && gracz1_gotowy){
+            return true;
+        }
+        return false;
     }
 }
