@@ -14,28 +14,31 @@ enum Wlasciciel {wgracz1, wgracz2, wnikt}
 
 enum Pionek {pionekZwykly, pionekDamka}
 /**
- *
- * @author Szwedzik
+ * Klasa stanowiąca część planszy w postaci jednego pola
+ * 
  */
 public class Pole extends Rectangle2D.Double{
-    private double X = 0;
 
-    private double Y = 0;
-
-    private double H = 0;
-
-    private double W = 0;
-
+    /**
+     * Pole przechowujące informację czy pole jest w stanie bycia klikniętym
+     */
     private boolean isClicked;
 
+    /**
+     * Flaga przechowująca informację o możliwości ruchów pionka
+     */
     private boolean isPossibleMove;
 
+    /** Zmienna informująca czy na danym polu znajduje się pionek. Jeśli true to pionek umieszczony w polu*/
     private boolean jestPionek;
 
+    /** Zmienna informująca o przynależności pola do gracza*/
     private Wlasciciel wlasciciel;
 
+    /** kolor pola*/
     private Color color;
 
+    /** Zmienna informująca czy na danym polu znajduje się pionek czy też damka*/
     Pionek pionek;
 
     Pole(double X, double Y, double W, double H, Color color){
@@ -44,18 +47,14 @@ public class Pole extends Rectangle2D.Double{
         isClicked = false;
         isPossibleMove = false;
         this.color = color;
-        this.X = X;
-        this.Y = Y;
-        this.H = H;
-        this.W = W;
 
         wlasciciel = Wlasciciel.wgracz1;
         jestPionek = false;
     }
 
     /**
-     *
-     * @param _wlasciciel
+     * Funkcja ustawiająca właściciela pola
+     * @param _wlasciciel właściciel dla którego zostanie przypisane pole
      */
     public void ustawWlasciciela(Wlasciciel _wlasciciel){
         wlasciciel = _wlasciciel;
@@ -65,7 +64,9 @@ public class Pole extends Rectangle2D.Double{
             jestPionek = true;
         }
     }
-
+    /** Funckja zwracająca właściciela pola
+     *@retrun właściciel pola
+     */
     public Wlasciciel zwrocWlasciciela(){
         return wlasciciel;
     }
@@ -77,7 +78,7 @@ public class Pole extends Rectangle2D.Double{
     public void setColor(Color color) {
         this.color = color;
     }
-
+    /** Funkcja usuwająca pionka z pola*/
     public void usunPionek(){
         jestPionek = false;
         wlasciciel = Wlasciciel.wnikt;
@@ -98,12 +99,17 @@ public class Pole extends Rectangle2D.Double{
     public void setIsPossibleMove(boolean possibleMove) {
         isPossibleMove = possibleMove;
     }
-
+    /** Funkcja zmieniająca współrzędne pola
+     *@param _x współrzędna x
+     *@param _y współrzędna y*/
     public void ustawWspolrzedne(int _x, int _y){
         x = _x;
         y = _y;
     }
-
+    /** Funkcja zwracająca typ umieszczonego na niej pionka
+     *@return typ pionka
+     *
+     */
     public Pionek getPionek(){
         return pionek;
     }

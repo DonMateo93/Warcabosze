@@ -20,25 +20,28 @@ enum Silnik {serwer, klient}
  * @author Szwedzik
  */
 public class Plansza {
-
+/** polaPlanszy przechowuje informacje o planszy w aktualnej grze*/
     public  Pole [][] polaPlanszy;
-
+/** Zmienna odpowiedzialna za przechowywanie informacji o tym czyj jest aktualnie ruch*/
     public CzyjRuch czyjRuch;
-
+/** Zmienna informująca o trwającej potyczce graczy*/
     public boolean przebiegGry;
-
+/** Pomocnicza zmienna pamiętająca współrzędną x pionka, który gracz planuje przemieścić*/
     public int xPrzenoszonegoPionka;
-
+/** Pomocnicza zmienna pamiętająca współrzędną y pionka, który gracz planuje przemieścić*/
     public int yPrzenoszonegoPionka;
-
+/** Zmienna pomocnicza informująca czy w trakcie ruchu gracza zostało wykonane bicie. Jeśli takie nastąpiło prawo do ruchu ma 
+ dalej gracz, który dokonał zbicia, pod warunkiem, iż takie możliwe ruchy ma*/
     boolean poBiciu;
-
+/** Gra oparta jest na jednym silniku więc potrzeba informacji czy dany gracz dołączył do gry, czy ją założył. Silnik może być serwerem
+ bądź klientem.*/
     public Silnik silnik;
-
+/** wysokość i szerokość planszy w pikselach*/
     private double height_weight;
-
+/** wysokość i szerokość jednego pola w pikselach*/
     private double height_weight_of_pole;
 
+    /** Konstruktor inicjujący nową planszę po rozpoczęciu gry.*/
     Plansza(double height_weight){
         //// TODO: to musi być ustawiane przez silnikGry 
         silnik = Silnik.serwer;
@@ -76,11 +79,12 @@ public class Plansza {
         xPrzenoszonegoPionka = -1;
         yPrzenoszonegoPionka = -1;
     }
-
+/** Zwraca wysokość i szerokość planszy
+     * @return .*/
     public double getHeight_weight() {
         return height_weight;
     }
-
+/** Funkcja ustawiająca na początku gry właścicieli pól zgodnie z przyjętymi zasadami w warcabach*/
     public void ustawWlascicieli() {
         for (int i = 0; i < 8; i++) {
             switch (i) {
@@ -131,7 +135,12 @@ public class Plansza {
             }
         }
     }
-
+/** Funkcja zwracająca współrzędne wszystkich pól dla wybranego pionka, na które można go przenieść
+ *@param _x współrzędna x pionka dla którego wyznaczane możliwe ruchy
+ *@param _y współrzędna y pionka dla którego wyznaczane możliwe ruchy
+ *@param pionek typ pionka dla którego jest wyznaczany możliwy ruch
+ *@return wektor współrzędnych na które można przenieść wybrany pionek
+ */
     public ArrayList mozliweRuchy(int _x, int _y, Pionek pionek) {
         ArrayList mozliweRuchy = new ArrayList();
         if (pionek == Pionek.pionekZwykly) {
@@ -483,16 +492,29 @@ public class Plansza {
         }
         return mozliweRuchy;
     }
-
+    
+/** Funkcja zwracająca właściciela pola o danych współrzędnych
+ *@param _x współrzędna x pola 
+ *@param _y wspólrzędna y pola
+     * @return  właściciel pola
+ */
     public Wlasciciel wlascicielPola(int _x, int _y) {
         return polaPlanszy[_x][_y].zwrocWlasciciela();
 
     }
-
+/** Funkcja ustawiająca ruch danego gracza w trakcie gry.
+ *@param _czyjRuch 
+ */
     public void ustawRuch(CzyjRuch _czyjRuch) {
         czyjRuch = _czyjRuch;
     }
-
+/** Funkcja wykonywana po każdym zdarzeniu kliknięcia myszy. Sprawdza czy gracz dokonuje wyboru pionka, który chce przesunąć przypisując wartości
+ * zmiennym xPrzenoszonegoPionka oraz yPrzenoszonegoPionka, bądź jeśli wybór ten został już wykonany przesuwa wybrany pionek, oczywiście sprawdzając
+ * czy taki ruch był możliwy. W zależności od wystąpionego zdarzenia funkcja przesyła zdarzenia pomiędzy serwerem a klientem.
+ *@param _x współrzędna x przeliczona na podstawie współrzędnej kursora myszy
+ *@param _y współrzędna y przeliczona na podstawie współrzędnej kursora myszy
+ *@return  wartość true jeśli wykonany ruch, wartość false w przypadku braku ruchu
+ */
     public boolean sprawdzDzialanieUzytkownika(int _x, int _y) {
         ArrayList wr = new ArrayList();
         WspolrzedneRuchowe w;
@@ -657,7 +679,11 @@ public class Plansza {
         }
         return false;
     }
-
+/** Funkcja zwraca możliwe ruchy dla pionka, którym uprzednio zostało wykonane bicie.
+ *@param _x współrzędna x pionka, dla którego wyznaczane są możliwe ruchy po biciu 
+ *@param _y współrzędna y pionka, dla którego wyznaczane są możliwe ruchy po biciu 
+ * @return wektor współrzędnych na które można przenieść pionek
+ */
     public ArrayList mozliweRuchyPoBiciu(int _x, int _y) {
         ArrayList mozliweRuchy = new ArrayList();
         if (polaPlanszy[xPrzenoszonegoPionka][yPrzenoszonegoPionka].pionek == Pionek.pionekZwykly) {
@@ -980,7 +1006,7 @@ public class Plansza {
     }
 
 
-
+/** Funkcja wywoływana gdy użytkownik nie podejmuje się kolejnych bić na które ma 3s po każdym, bądź wywoływana w przypadku braku możliwych kolejnych bić*/
     public void zatrzymajProcesBic() {
         xPrzenoszonegoPionka = -1;
         yPrzenoszonegoPionka = -1;
@@ -1000,7 +1026,10 @@ public class Plansza {
 
     }
 
-
+/** Funkcja sprawdzająca, czy w przypadku ruchu użytkownika nie wystąpił fuch korzystny dla przeciwnika.
+*
+*@param czyjRuch parametr określający kto wykonał ruch
+*/
     private boolean sprawdzCzyByloBicie(CzyjRuch czyjRuch) {
         if (czyjRuch == CzyjRuch.rgracz1) {
             for (int i = 0; i < 8; i++) {
@@ -1048,7 +1077,12 @@ public class Plansza {
         }
     }
 
-
+/** Funkcja aktualizująca stan danego pola na planszy
+ *@param wlasciciel typ właściciela jaki ma być ustawiony
+ *@param x współrzędna x pola zmienianego
+ * @param y współrzędna y pola zmienianego
+ * @param pionek typ pionka ustawianego
+ */
     public void zmienStanPola(Wlasciciel wlasciciel, int x, int y, Pionek pionek){
         polaPlanszy[x][y].ustawWlasciciela(wlasciciel);
         polaPlanszy[x][y].pionek = pionek;
@@ -1057,6 +1091,13 @@ public class Plansza {
         }
     }
 
+    /**
+     * Funkcja zmienia położenie pionka na planszy
+     * @param x_start dotychczasowa współrzędna x
+     * @param y_start dotychczasowa współrzędna y
+     * @param x_stop docelowa współrzędna x
+     * @param y_stop docelowa współrzędna y
+     */
     public void przesunPionek(int x_start, int y_start, int x_stop, int y_stop){
         Wlasciciel wl = polaPlanszy[x_start][y_start].zwrocWlasciciela();
         Pionek pi = polaPlanszy[x_start][y_start].getPionek();
@@ -1064,7 +1105,7 @@ public class Plansza {
         polaPlanszy[x_start][y_start].usunPionek();
         setPionekAt(x_stop, y_stop, wl, pi);
     }
-
+/** Funkcja, która ustawia status pionka na damkę gdy pionek przeciwnika dojdzie do przeciwnej krawędzi planszy*/
     public void wprowadzDamki() {
         for (int i = 0; i < 8; i++) {
             if (polaPlanszy[i][0].zwrocWlasciciela() == Wlasciciel.wgracz1) {
@@ -1072,11 +1113,13 @@ public class Plansza {
             }
             if (polaPlanszy[i][7].zwrocWlasciciela() == Wlasciciel.wgracz2) {
                 polaPlanszy[i][7].pionek = Pionek.pionekDamka;
-                System.out.println("ustawiam");
             }
         }
     }
 
+    /**
+     * Funkcja czyści całą planszę z pionków
+     */
     public void wyczysc(){
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
@@ -1085,18 +1128,37 @@ public class Plansza {
         }
     }
 
+    /**
+     * Funkcja stawia pionek na danym polu
+     * @param x współrzędna x pola
+     * @param y współrzędna y pola
+     * @param wl kto będzie właścicielem pionka
+     * @param pi jaki to ma być pionek
+     */
     public void setPionekAt(int x, int y, Wlasciciel wl, Pionek pi){
         polaPlanszy[x][y].setPionekAndWl(wl,pi);
     }
 
+    /**
+     * Funkcja ustawia czyj jest obecnie ruch
+     */
     public void setCzyjRuch(CzyjRuch czyjRuch) {
         this.czyjRuch = czyjRuch;
     }
 
+    /**
+     * zapamiętanie adresu do instancji silnika
+     * @param silnik
+     */
     public void setSilnik(Silnik silnik) {
         this.silnik = silnik;
     }
 
+    /**
+     * usunięcie pionka ze wskazanego pola planszy
+     * @param x współrzędna x pola
+     * @param y współrzędna y pola
+     */
     public void usunPionekAt(int x, int y){
         setPionekAt(x,y,Wlasciciel.wnikt,Pionek.pionekZwykly);
     }

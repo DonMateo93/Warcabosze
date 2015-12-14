@@ -13,8 +13,8 @@ import static com.company.CzyjRuch.rgracz1;
 
 
 /**
- *
- * @author Szwedzik
+ * Klasa odpowiedzialna za uruchamianie konkretnych funkcji z planszy
+ * oraz część logiczną aplikacji
  */
 public class SilnikGry{
 
@@ -23,23 +23,24 @@ public class SilnikGry{
     public static SilnikGry getInstance() {
         return instance;
     }
-
+    /** Typ gracza przypisany dla danego silnika ( uruchomionej aplikacji)*/
     Gracz gracz;
 
     private boolean gracz1_gotowy = false;
 
     private boolean gracz2_gotowy = false;
-
+    
+    /** Zmienna przechowująca aktualny stan planszy*/
     private Plansza plansza;
 
     Serwer serwer;
 
     Klient klient;
-
+    /** Czas, w którym użytkownik może jeszcze wykonać kolejne bicie)*/
     Timer czasDoZbicia;
-
+    /** Wartość w pikselach szerokości pola*/
     int szerokoscPola;
-
+    /** Wartość w pikselach wysokości pola*/
     int wysokoscPola;
 
     SilnikGry(){
@@ -70,7 +71,6 @@ public class SilnikGry{
             if(czasDoZbicia != null){
                 czasDoZbicia.cancel();
             }
-            System.out.println("czas minal");
             czasDoZbicia = new Timer();
             czasDoZbicia.schedule(new TimerTask() {
 
@@ -85,7 +85,6 @@ public class SilnikGry{
 
     public void zatrzymajCzas(){
         czasDoZbicia.cancel();
-        System.out.println("czas minal");
 
         plansza.zatrzymajProcesBic();
     }

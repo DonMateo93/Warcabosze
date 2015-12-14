@@ -10,18 +10,50 @@ import java.util.*;
 import java.util.Timer;
 
 /**
- * Created by avans on 2015-11-16.
+ * Klasa odpowiedzialna za graficzną warstwę planszy do gry: rysowanie obsługę zdarzeń, komunikację z logiczną warstwą
  */
 public class PlanszaGrafika extends JComponent implements MouseMotionListener,MouseListener {
 
+    /**
+     * Logiczna warstwa planszy do gry
+     */
     private Plansza plansza;
+
+    /**
+     * Timer pilnujący czy minął czas dozwolony na kolejny ruch
+     */
     Timer czasDoZbicia;
+
+    /**
+     * wysokość i szerokość planszy
+     */
     private int rect_height_and_width;
+
+    /**
+     * wymiar boku kwadratu odpowiadającego polu planszy
+     */
     private int rect_size;
+
+    /**
+     * zmienna przechowująca informację o tym, która współrzędna została wybrana
+     */
     private Point2D.Double active_point;
+
+    /**
+     * pole przechowujące listę możliwych do wykonania ruchów
+     */
     private ArrayList mozliwe_ruchy;
+
+    /**
+     * pole przechowujące adres do instancji okna głównego
+     */
     private Main glowny;
 
+    /**
+     * konstruktor klasy, inicjalizacja niektórych zmiennych
+     * @param plansza adres do instancji klasy odpowiadającej za warstwę logiczną planszy
+     * @param rect_height_and_width zadana wysokość i szerokość planszy
+     */
     PlanszaGrafika(Plansza plansza, int rect_height_and_width){
         this.plansza = plansza;
         this.rect_height_and_width = rect_height_and_width;
@@ -31,6 +63,9 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
         mozliwe_ruchy.clear();
     }
 
+    /**
+     *Metoda rysująca planszę wraz ze wszystkimi pionkami
+     */
     @Override
     public void paintComponent(Graphics g){
         //super.paintComponent(g);
@@ -63,6 +98,9 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
         }
     }
 
+    /**
+     * Metoda rysująca szachownicę obróconą o 180 stopni (perspektywa gracza drugiego)
+     */
     public void paintSzachownicaRotatedUtil(Graphics2D g2d, int i, int j, boolean isPossibleMove){
 
         if ((int) active_point.getX() == i && (int) active_point.getY() == j) {
@@ -116,6 +154,9 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
         }
     }
 
+    /**
+     * metoda rysująca szachownicę bez obrotu
+     */
     public void paintSzachownicaUtil(Graphics2D g2d, int i, int j, boolean isPossibleMove){
 
         if ((int) active_point.getX() == i && (int) active_point.getY() == j) {
@@ -152,6 +193,9 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
         }
     }
 
+    /**
+     *Metoda rysująca szachownicę bez pionków
+     */
     public void paintSzachownica(Graphics2D g2d){
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -162,6 +206,9 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
         }
     }
 
+    /**
+     * Metoda obsługująca zdarzenie kliknięcia myszką na planszę
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -180,6 +227,9 @@ public class PlanszaGrafika extends JComponent implements MouseMotionListener,Mo
         repaint();
     }
 
+    /**
+     * Metoda wywoływana w funkcji mouseClicked, wydzielona jako oddzielny byt celem czytelności i nie powtarzania kodu
+     */
     public void mouseClickedUtil(int i, int j){
 
         if (plansza.polaPlanszy[i][j].getColor() == Color.black) {

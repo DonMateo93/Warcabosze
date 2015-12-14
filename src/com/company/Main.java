@@ -11,29 +11,39 @@ import java.util.concurrent.TimeUnit;
 
 /**
  *
- * @author Szwedzik
+ * Główna klasa odpowiedzialna za stworzenie interfejsu graficznego
  */
 public class Main extends JFrame{
 
+    /**
+     * Przechowywana instancja klasy
+     */
     private static Main instance = null;
 
-    public static Main getInstance() {
-        return instance;
-    }
 
+    /**
+     * Logiczny silnik gry
+     */
     SilnikGry silnik;
 
-    public SilnikGry getSilnik() {
-        return silnik;
-    }
-
+    /**
+     * port pod którym ustanowiono komunikację sieciową
+     */
     private int port;
 
+    /**
+     * Klasa rysująca planszę
+     */
     PlanszaGrafika plansza_g;
+
 
     private JScrollPane jScrollPane1 = null;
 
+    /**
+     * Warstwa logiczna planszy do gry
+     */
     private Plansza plansza;
+
 
     private JScrollPane jScrollPane2 = null;
 
@@ -65,6 +75,9 @@ public class Main extends JFrame{
 
     private Server server = null;
 
+    /**
+     * flaga informująca czy aplikacja stworzyła już klienta do komunikacji przez sieć
+     */
     private boolean clientStarted = false;
 
     private JTextArea czatOdbierz = null;
@@ -73,12 +86,25 @@ public class Main extends JFrame{
 
     private JLabel jLabel3 = null;
 
+    /**
+     * zmienna przechowująca upływający czas
+     */
     private TimeWatch watch = null;
 
+    /**
+     * timer wywołujący zdarzenie odświeżania wyświetlacza ukazującego czas upływającej gry
+     */
     private Timer timeras = null;
 
+    /**
+     * zmienna przechowująca ostatni oczyt ze zmiennej watch
+     */
     long passedTimeInSeconds = 0;
 
+    /**
+     * Konstruktor klasy tworzy instancję silnika gry, wyświetla okno
+     * @param _napis tytuł okna
+     */
     Main(String _napis){
         super(_napis);
 
@@ -103,6 +129,9 @@ public class Main extends JFrame{
         timeras.start();
     }
 
+    /**
+     * Konfiguruje i zwraca adres do wyświetlacza czasu gry
+     */
     private JTextField getTimerDisplay(){
 
         if (timerDisplay == null) {
@@ -116,6 +145,23 @@ public class Main extends JFrame{
         return timerDisplay;
     }
 
+    /**
+     *Zwraca instancję klasy Main
+     */
+    public static Main getInstance() {
+        return instance;
+    }
+
+    /**
+     *Zwraca adres do instancji klasy silnik
+     */
+    public SilnikGry getSilnik() {
+        return silnik;
+    }
+
+    /**
+     *Przechowuje definicję akcji która będzie wywoływana przez Timer
+     */
     private ActionListener getActionListener(){
         ActionListener actionListener = new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
@@ -143,6 +189,9 @@ public class Main extends JFrame{
         return actionListener;
     }
 
+    /**
+     * Zwraca adres do uzupełnionego głównego panelu JPanel dla okna Main
+     */
     private JPanel getJContentPane(SilnikGry silnik) {
         if (jContentPane == null) {
             jLabel3 = new JLabel();
@@ -173,6 +222,9 @@ public class Main extends JFrame{
         return jContentPane;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do etykiety nad wyświetlaczem czasu gry
+     */
     private JLabel getTimerLabel(){
         if(timerLabel == null){
             timerLabel = new JLabel("Czas gry:");
@@ -183,6 +235,9 @@ public class Main extends JFrame{
     }
 
 
+    /**
+     *Funkcja wywoływana na początku programu
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -192,6 +247,9 @@ public class Main extends JFrame{
         });
     }
 
+    /**
+     *Inicjuje wątek pracujący przez cały czas trwania aplikacji, sprawdzający czy wystąpił przesył danych
+     */
     private void initialize() {
         new Thread() {
             @Override
@@ -213,11 +271,9 @@ public class Main extends JFrame{
         }.start();
     }
 
-    private void fake(){
-        int a = 3;
-        int b = 5;
-        int c = a+ b;
-    }
+    /**
+     * Funkcja parsująca komunikat przesłany przez sieć
+     */
     private void processMessages() {
         GameEvent ge;
         while (client != null && client.isAlive()
@@ -276,9 +332,9 @@ public class Main extends JFrame{
                         } else if(a.equals("failed")){
                             String a1 = s1.substring(ind + 1);
                             if(a1.equals(getID())){
-                                zmienStatus("PRZEGRAŁEŚ!!!", RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
+                                zmienStatus("PRZEGRALES!!!", RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
                             }else{
-                                zmienStatus("WYGRAŁEŚ!!!", RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
+                                zmienStatus("WYGRALES!!!", RodzajWiadomosci.WIADOMOSC_POZYTYWNA);
                             }
                             plansza.wyczysc();
                             plansza_g.repaint();
@@ -298,7 +354,7 @@ public class Main extends JFrame{
 
                             silnik.setGraczGotowy(true,ge.getPlayerId());
                             if(silnik.saObajGraczeGotowi()){
-                                zmienStatus("GRA ROZPOCZĘTA!!!", RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
+                                zmienStatus("GRA ROZPOCZETA!!!", RodzajWiadomosci.WIADOMOSC_NEUTRALNA);
                                 silnik.setGraczGotowy(false,"ID_SERVER");
                                 silnik.setGraczGotowy(false,"ID_CLIENT");
                                 plansza.przebiegGry = true;
@@ -306,7 +362,6 @@ public class Main extends JFrame{
                                 nowaGra.setEnabled(false);
                                 plansza.ustawWlascicieli();
                                 plansza_g.repaint();
-                                fake();
                                 watch = TimeWatch.start();
                             }
                         }
@@ -385,6 +440,9 @@ public class Main extends JFrame{
         }
     }
 
+    /**
+     * Funkcja wywołana w momencie gdy połączenie sieciowe zostaje przerwane
+     */
     private void zerwanePolaczenie() {
         if (klient.isSelected()) {
             clientStarted = false;
@@ -399,6 +457,9 @@ public class Main extends JFrame{
                 RodzajWiadomosci.WIADOMOSC_NEGATYWNA);
     }
 
+    /**
+     * Funkcja zwracająca informację, czy aplikacja pracuje w trybie klienta czy serwera
+     */
     public String getID() {
         return (serwer.isSelected()) ? "ID_SERVER" : "ID_CLIENT";
     }
@@ -411,6 +472,11 @@ public class Main extends JFrame{
         });
     }
 
+    /**
+     * Funkcja zajmująca się poprawnym wyświetlaniem wiadomości w oknie statusu
+     * @param wiadomosc treść wiadomości
+     * @param rodzaj w zależności od rodzaju zmienia się kolor wyświetlacza
+     */
     private void zmienStatus(String wiadomosc, RodzajWiadomosci rodzaj) {
         Color color;
         if (rodzaj == RodzajWiadomosci.WIADOMOSC_POZYTYWNA)
@@ -432,6 +498,9 @@ public class Main extends JFrame{
         token = b;
     }
 
+    /**
+     * Funkcja resetuje niektóre z ustawień, aby możliwe było ponowne rozpoczęcie gry
+     */
     private void ustawOdNowa() {
         nowaGra.setText("Rozpocznij grę");
         start.setText("Start");
@@ -443,6 +512,11 @@ public class Main extends JFrame{
         adres.setEnabled(true);
     }
 
+    /**
+     * Rysowanie planszy w oknie głównym
+     * @param myPanel Panel do którego dodana zostanie grafika
+     * @param silnik z silnika pobierana jest logiczna warstwa planszy
+     */
     public void paintPlansza(JPanel myPanel, SilnikGry silnik){
         this.silnik = silnik;
 
@@ -455,6 +529,9 @@ public class Main extends JFrame{
         myPanel.add(plansza_g,null);
     }
 
+    /**
+     * Konfiguruje i zwraca adres do radiobutton pozwalającego na wybór gry w trybie klienta
+     */
     private JRadioButton getKlient(){
         if (klient == null) {
             klient = new JRadioButton();
@@ -472,6 +549,9 @@ public class Main extends JFrame{
         return klient;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do pola tekstowego, w którym wpisywane są wiadomości na czacie
+     */
     private JTextField getCzatWyslij() {
         if (czatWyslij == null) {
             czatWyslij = new JTextField();
@@ -492,6 +572,9 @@ public class Main extends JFrame{
         return czatWyslij;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do przycisku "Rozpocznij grę"
+     */
     private JButton getNowaGra() {
         if (nowaGra == null) {
             nowaGra = new JButton();
@@ -510,6 +593,9 @@ public class Main extends JFrame{
         return nowaGra;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do przycisku "Poddaj się"
+     */
     public JButton getPoddajSie() {
         if (poddajSie == null) {
             poddajSie = new JButton();
@@ -529,6 +615,9 @@ public class Main extends JFrame{
         return poddajSie;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do radio button pozwalającego na grę w trybie serwera
+     */
     private JRadioButton getSerwer() {
         if (serwer == null) {
             serwer = new JRadioButton();
@@ -547,6 +636,9 @@ public class Main extends JFrame{
         return serwer;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do pola tekstowego pozwalającego na wpisanie adresu ip, do którego będzie mógł podłączyć się klient
+     */
     private JTextField getAdres() {
         if (adres == null) {
             adres = new JTextField();
@@ -558,6 +650,9 @@ public class Main extends JFrame{
         return adres;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do przycisk pozwalający graczowi będącemu w trybie klienta na podłaczenie się do serwera
+     */
     private JButton getPolacz() {
         if (polacz == null) {
             polacz = new JButton();
@@ -620,6 +715,9 @@ public class Main extends JFrame{
         return polacz;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do przycisku ustanawiającemu serwer do gry
+     */
     private JButton getStart() {
         if (start == null) {
             start = new JButton();
@@ -678,6 +776,11 @@ public class Main extends JFrame{
         return start;
     }
 
+    /**
+     * Funkcja wysyła wiadomości przez sieć
+     * @param ge przechowuje wiadomość i informację o nadawcy
+     * @return true jeżeli wszystko poszło dobrze, false w przeciwnym wypadku
+     */
     public boolean sendMessage(GameEvent ge) {
         if (client != null && client.isAlive()) {
             ge.setPlayerId(getID());
@@ -688,6 +791,9 @@ public class Main extends JFrame{
         }
     }
 
+    /**
+     * Konfiguruje i zwraca adres do scroll pane który będzie nałożony na okno wiadomości odbieranych przez czat
+     */
     private JScrollPane getJScrollPane1() {
         if (jScrollPane1 == null) {
             jScrollPane1 = new JScrollPane();
@@ -698,6 +804,9 @@ public class Main extends JFrame{
         return jScrollPane1;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do scroll pane który będzie nałożony na okno statusu gry
+     */
     private JScrollPane getJScrollPane2() {
         if (jScrollPane2 == null) {
             jScrollPane2 = new JScrollPane();
@@ -709,6 +818,9 @@ public class Main extends JFrame{
         return jScrollPane2;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do pola tekstowego wyświetlającego istotne dla gry informacje
+     */
     private JTextArea getStatus() {
         if (status == null) {
             status = new JTextArea();
@@ -725,6 +837,9 @@ public class Main extends JFrame{
         return status;
     }
 
+    /**
+     * Konfiguruje i zwraca adres do okna wyświetlającego wiadomości pochodzące z czatu
+     */
     private JTextArea getCzatOdbierz() {
         if (czatOdbierz == null) {
             czatOdbierz = new JTextArea();
