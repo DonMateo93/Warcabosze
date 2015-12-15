@@ -86,6 +86,8 @@ public class Main extends JFrame{
 
     private JLabel jLabel3 = null;
 
+    private JLabel czyjaKolej = null;
+
     /**
      * zmienna przechowująca upływający czas
      */
@@ -201,6 +203,7 @@ public class Main extends JFrame{
             jContentPane.setLayout(null);
             paintPlansza(jContentPane,silnik);
             jContentPane.add(jLabel3, null);
+            jContentPane.add(getCzyjaKolej(),null);
             jContentPane.add(getCzatWyslij(), null);
             jContentPane.add(getJScrollPane1(), null);
             jContentPane.add(getJScrollPane2(), null);
@@ -234,6 +237,14 @@ public class Main extends JFrame{
         return timerLabel;
     }
 
+    private JLabel getCzyjaKolej() {
+        if (czyjaKolej == null) {
+            czyjaKolej = new JLabel("");
+            czyjaKolej.setBounds(420, 356, 200, 21);
+        }
+
+        return czyjaKolej;
+    }
 
     /**
      *Funkcja wywoływana na początku programu
@@ -324,8 +335,18 @@ public class Main extends JFrame{
 
                             if(who == 1){
                                 plansza.setCzyjRuch(CzyjRuch.rgracz1);
+                                if(getID() =="ID_SERVER") {
+                                    czyjaKolej.setText("Twoj ruch");
+                                }else{
+                                    czyjaKolej.setText("Ruch przeciwnika");
+                                }
                             } else if(who == 2) {
                                 plansza.setCzyjRuch(CzyjRuch.rgracz2);
+                                if(getID() =="ID_SERVER") {
+                                    czyjaKolej.setText("Ruch przeciwnika");
+                                }else{
+                                    czyjaKolej.setText("Twoj ruch");
+                                }
                             } else {
                                 //todo: err;
                             }
@@ -363,6 +384,12 @@ public class Main extends JFrame{
                                 plansza.ustawWlascicieli();
                                 plansza_g.repaint();
                                 watch = TimeWatch.start();
+                                if(getID() =="ID_SERVER") {
+                                    czyjaKolej.setText("Twoj ruch");
+                                }else{
+                                    czyjaKolej.setText("Ruch przeciwnika");
+                                }
+
                             }
                         }
 
@@ -667,6 +694,11 @@ public class Main extends JFrame{
 
                         silnik.ustawKlient();
                         plansza.setCzyjRuch(CzyjRuch.rgracz1);
+//                        if(getID() =="ID_SERVER") {
+//                            czyjaKolej.setText("Twoj ruch");
+//                        }else{
+//                            czyjaKolej.setText("Ruch przeciwnika");
+//                        }
                         plansza.setSilnik(Silnik.klient);
 
                         serwer.setEnabled(false);
@@ -736,6 +768,11 @@ public class Main extends JFrame{
 
                         silnik.ustawSerwer();
                         plansza.setCzyjRuch(CzyjRuch.rgracz1);
+//                        if(getID() =="ID_SERVER") {
+//                            czyjaKolej.setText("Twoj ruch");
+//                        }else{
+//                            czyjaKolej.setText("Ruch przeciwnika");
+//                        }
                         plansza.setSilnik(Silnik.serwer);
 
                         server = new Server(port);

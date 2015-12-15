@@ -26,5 +26,4 @@ public class Gracz {
     public void dodajPunkt(){
         punkty++;
     }
-    
 }
